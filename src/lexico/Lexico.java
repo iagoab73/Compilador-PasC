@@ -362,6 +362,8 @@ public class Lexico {
      * Método Principal, que trata as exceções de arquivo, mostra os tokens encontrados pelo lexer e os tokens da tabela de símbolos. 
      * @param args .
      */
+    
+    /*
     public static void main(String[] args){
         try{
             LeArquivo();
@@ -374,5 +376,5 @@ public class Lexico {
         }catch(Exception e){
             System.out.println("Erro no arquivo!");
         }
-    }
+    }*/
 }

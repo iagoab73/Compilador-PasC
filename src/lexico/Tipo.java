@@ -1,4 +1,4 @@
-package AnalisadorLexico;
+package lexico;
 
 /**
  * Enumerador usado para facilitar a identificação dos tokens da linguagem.
@@ -55,6 +55,7 @@ public enum Tipo {
     VAZIO,
     
     // Não terminais da gramática
+    P,
     B,
     DL,
     D,

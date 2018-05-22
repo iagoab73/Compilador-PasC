@@ -1,4 +1,4 @@
-package AnalisadorLexico;
+package lexico;
 
 /**
  * Classe Token, representação dos simbolos, palavras chaves, identificadores, entre outros tipos de lexemas encontrados no programa.

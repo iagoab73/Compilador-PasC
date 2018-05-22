@@ -1,4 +1,4 @@
-package AnalisadorLexico;
+package lexico;
 
 import java.util.HashMap;
 
