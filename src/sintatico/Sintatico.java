@@ -57,7 +57,12 @@ public class Sintatico {
         estados.put(42, new Estado(Tipo.WHS, 42, new Path[]{new Path(Tipo.VAZIO, 17), new Path(Tipo.ID, 24), new Path(Tipo.KW_IF, 25), new Path(Tipo.KW_READ, 27), new Path(Tipo.KW_WRITE, 28), new Path(Tipo.KW_WHILE, 29)}, new Path[]{new Path(Tipo.SL, 30), new Path(Tipo.S, 16), new Path(Tipo.AS, 18), new Path(Tipo.IS, 19), new Path(Tipo.WHS, 20), new Path(Tipo.RS, 21), new Path(Tipo.WRS, 22), new Path(Tipo.SP, 26)}));
         estados.put(43, new Estado(Tipo.RS, 43, new Path[]{}, new Path[]{}));
         estados.put(44, new Estado(Tipo.WRS, 44, new Path[]{}, new Path[]{}));
-        estados.put(45, new Estado(Tipo.WRS, 45, new Path[]{}, new Path[]{}));
+        estados.put(45, new Estado(Tipo.SP, 45, new Path[]{new Path(Tipo.KW_NOT,54), new Path(Tipo.VAZIO, 55)}, new Path[]{new Path(Tipo.CN, 59), new Path(Tipo.E, 57),new Path(Tipo.SE, 58), new Path(Tipo.TE, 49), new Path(Tipo.FA, 52), new Path(Tipo.FA_, 53)}));
+        estados.put(46, new Estado(Tipo.IL_, 46, new Path[]{}, new Path[]{}));
+        estados.put(47, new Estado(Tipo.SL, 47, new Path[]{}, new Path[]{}));
+        estados.put(48, new Estado(Tipo.AS, 48, new Path[]{}, new Path[]{}));
+        estados.put(49, new Estado(Tipo.SE, 49, new Path[]{}, new Path[]{}));
+        
     }
 
     public static void shift() {
