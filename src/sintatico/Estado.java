@@ -7,10 +7,12 @@ import lexico.Tipo;
  * @author Iago
  */
 public class Estado {
-    private final int id;
-    private final Tipo naoTerminal;
+    public final int id;
+    public final Tipo naoTerminal;
     public final Path[] shifts; 
     public final Path[] gotos;
+    public int qntTokens;
+    
 
     public Estado(Tipo naoTerminal, int id, Path[] shifts, Path[] gotos) {
         this.naoTerminal = naoTerminal;
@@ -26,5 +28,9 @@ public class Estado {
         for(int i=0;i<gotos.length;i++){
             System.out.println(gotos[i].entrada + " " + gotos[i].saida);
         }
+    }
+    
+    public void setQntTokens(int qntTokens){
+        this.qntTokens = qntTokens;
     }
 }
