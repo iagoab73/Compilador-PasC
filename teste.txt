@@ -1,3 +1,12 @@
-program iiiddd {
+program Compilador{
 
+	number = 5;
+	numa = 3;
+	char1 = ;
+	char2 = 'j';
+	char3 = 'n';
+	
+	if (number<numee){
+		write(char2);	
+	};
 }

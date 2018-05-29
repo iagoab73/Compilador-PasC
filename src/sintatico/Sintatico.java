@@ -15,6 +15,7 @@ public class Sintatico {
     static Lexico lexico;
     static HashMap<Integer, Estado> estados;
     static Stack<Integer> pilha;
+    static int contErro = 0;
 
     /**
      * @param args the command line arguments
@@ -168,7 +169,18 @@ public class Sintatico {
             pilha.push(estadoAtual);
             System.out.println("SHIFT " + estadoAtual);
             iniciaEstado(t, estadoAtual);
-        }  
+        }else{
+            System.out.println("ERRO, esperados:");
+            for(Path p : e.shifts){
+                System.out.println(p.entrada);
+            }
+            if(contErro > 3){
+                return;
+            }
+            contErro++;
+            t = lexico.proximoToken();
+            iniciaEstado(t, estadoAtual);
+        }
     }
     
     public static void reduce(Token t, int estadoAtual){
