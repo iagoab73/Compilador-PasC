@@ -19,6 +19,7 @@ public class Estado {
         this.id = id;
         this.shifts = shifts;
         this.gotos = gotos;
+        this.qntTokens = -1;
         System.out.println("\n" + this.id + ": " + this.naoTerminal);
         
         for(int i=0;i<shifts.length;i++){

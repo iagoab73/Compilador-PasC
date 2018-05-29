@@ -4,6 +4,7 @@ import lexico.Tipo;
 import java.util.HashMap;
 import java.util.Stack;
 import lexico.Lexico;
+import lexico.Token;
 
 /**
  *
@@ -11,6 +12,7 @@ import lexico.Lexico;
  */
 public class Sintatico {
 
+    static Lexico lexico;
     static HashMap<Integer, Estado> estados;
     static Stack<Integer> pilha;
 
@@ -123,13 +125,37 @@ public class Sintatico {
         
         
         
-        Lexico lexico = new Lexico();
-        lexico.proximoToken();
-        lexico.proximoToken();
+        lexico = new Lexico();
+        Token t = lexico.proximoToken();
+        int estadoAtual = 0;
+        iniciaEstado(t, estadoAtual);
+    }
+    
+    public static void iniciaEstado(Token t, int estadoAtual){
+        if(estados.get(estadoAtual).qntTokens != -1){
+            shift(t, estadoAtual);
+        }else{
+            reduce(t, estadoAtual);
+        }
     }
 
-    public static void shift() {
-
+    public static void shift(Token t, int estadoAtual) {
+        for(Path p : estados.get(estadoAtual).shifts){
+            if(p.entrada.equals(t.getTipo())){
+                estadoAtual = p.saida;
+                return;
+            }else if(p.entrada.equals(Tipo.VAZIO)){
+                
+            }
+        }
+    }
+    
+    public static void reduce(Token t, int estadoAtual){
+        
+    }
+    
+    public static void goTo(){
+        
     }
 
 }
