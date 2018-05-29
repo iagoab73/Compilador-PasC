@@ -27,7 +27,7 @@ public class Sintatico {
         estados.put(4, new Estado(Tipo.P, 4, new Path[]{new Path(Tipo.EOF, 0)}, new Path[]{}));
         estados.put(5, new Estado(Tipo.B, 5, new Path[]{new Path(Tipo.SMB_OBC, 11)}, new Path[]{}));
         estados.put(6, new Estado(Tipo.DL, 6, new Path[]{new Path(Tipo.SMB_SEM, 12)}, new Path[]{}));
-        estados.put(7, new Estado(Tipo.DL, 7, 0));
+        estados.put(7, new Estado(Tipo.DL, 7, 1));
         estados.put(8, new Estado(Tipo.D, 8, new Path[]{new Path(Tipo.ID, 14)}, new Path[]{new Path(Tipo.IL, 13)}));
         estados.put(9, new Estado(Tipo.TY, 9, 1));
         estados.put(10, new Estado(Tipo.TY, 10, 1));
@@ -53,7 +53,7 @@ public class Sintatico {
         estados.put(30, new Estado(Tipo.WHS, 30, new Path[]{new Path(Tipo.SMB_CBC, 88)}, new Path[]{}));
         estados.put(35, new Estado(Tipo.IL, 35, 2));
         estados.put(36, new Estado(Tipo.IL_, 36, new Path[]{new Path(Tipo.ID, 14)}, new Path[]{new Path(Tipo.IL, 46)}));
-        estados.put(37, new Estado(Tipo.IL_, 37, 0));
+        estados.put(37, new Estado(Tipo.IL_, 37, 1));
         estados.put(38, new Estado(Tipo.B, 38, 4));
         estados.put(39, new Estado(Tipo.SL, 39, new Path[]{new Path(Tipo.VAZIO, 17), new Path(Tipo.ID, 24), new Path(Tipo.KW_IF, 25), new Path(Tipo.KW_READ, 27), new Path(Tipo.KW_WRITE, 28), new Path(Tipo.KW_WHILE, 29)}, new Path[]{new Path(Tipo.SL, 49), new Path(Tipo.S, 16), new Path(Tipo.AS, 18), new Path(Tipo.IS, 19), new Path(Tipo.WHS, 20), new Path(Tipo.RS, 21), new Path(Tipo.WRS, 22), new Path(Tipo.SP, 26)}));
         estados.put(40, new Estado(Tipo.AS, 40, new Path[]{new Path(Tipo.KW_NOT, 54), new Path(Tipo.VAZIO, 55)}, new Path[]{new Path(Tipo.SE, 48), new Path(Tipo.TE, 49), new Path(Tipo.FA, 52), new Path(Tipo.FA_, 53)}));
@@ -71,20 +71,20 @@ public class Sintatico {
         estados.put(52, new Estado(Tipo.TE, 52, new Path[]{new Path(Tipo.VAZIO, 68), new Path(Tipo.OP_MUL, 69), new Path(Tipo.OP_DIV, 70), new Path(Tipo.KW_AND, 71)}, new Path[]{new Path(Tipo.TE_, 66), new Path(Tipo.M, 67)}));
         estados.put(53, new Estado(Tipo.FA, 53, new Path[]{new Path(Tipo.ID, 73), new Path(Tipo.SMB_OPA, 75), new Path(Tipo.CON_NUM, 76), new Path(Tipo.CON_CHAR, 77)}, new Path[]{new Path(Tipo.F, 72), new Path(Tipo.CT, 74)}));
         estados.put(54, new Estado(Tipo.FA_, 54, 1));
-        estados.put(55, new Estado(Tipo.FA_, 55, 0));
+        estados.put(55, new Estado(Tipo.FA_, 55, 1));
         estados.put(56, new Estado(Tipo.IS, 56, new Path[]{new Path(Tipo.SMB_CPA, 78)}, new Path[]{}));
         estados.put(57, new Estado(Tipo.CN, 57, 1));
         estados.put(58, new Estado(Tipo.E, 58, new Path[]{new Path(Tipo.VAZIO, 81), new Path(Tipo.OP_EQ, 82), new Path(Tipo.OP_GT, 83), new Path(Tipo.OP_GE, 84), new Path(Tipo.OP_LT, 85), new Path(Tipo.OP_LE, 86), new Path(Tipo.OP_NE, 87)}, new Path[]{new Path(Tipo.E_, 79), new Path(Tipo.R, 80)}));
         estados.put(59, new Estado(Tipo.SP, 59, new Path[]{new Path(Tipo.SMB_CPA, 89)}, new Path[]{}));
         estados.put(60, new Estado(Tipo.SE, 60, 2));
         estados.put(61, new Estado(Tipo.SE_, 61, new Path[]{new Path(Tipo.KW_NOT, 54), new Path(Tipo.VAZIO, 55)}, new Path[]{new Path(Tipo.TE, 90), new Path(Tipo.FA, 52), new Path(Tipo.FA_, 53)}));
-        estados.put(62, new Estado(Tipo.SE_, 62, 0));
+        estados.put(62, new Estado(Tipo.SE_, 62, 1));
         estados.put(63, new Estado(Tipo.A, 63, 1));
         estados.put(64, new Estado(Tipo.A, 64, 1));
         estados.put(65, new Estado(Tipo.A, 65, 1));
         estados.put(66, new Estado(Tipo.TE, 66, 2));
         estados.put(67, new Estado(Tipo.TE_, 67, new Path[]{new Path(Tipo.KW_NOT, 54), new Path(Tipo.VAZIO, 55)}, new Path[]{new Path(Tipo.FA, 91), new Path(Tipo.FA_, 53)}));
-        estados.put(68, new Estado(Tipo.TE_, 68, 0));
+        estados.put(68, new Estado(Tipo.TE_, 68, 1));
         estados.put(69, new Estado(Tipo.M, 69, 1));
         estados.put(70, new Estado(Tipo.M, 70, 1));
         estados.put(71, new Estado(Tipo.M, 71, 1));
@@ -97,7 +97,7 @@ public class Sintatico {
         estados.put(78, new Estado(Tipo.IS, 78, new Path[]{new Path(Tipo.SMB_OBC, 93)}, new Path[]{}));
         estados.put(79, new Estado(Tipo.E, 79, 2));
         estados.put(80, new Estado(Tipo.E_, 80, new Path[]{new Path(Tipo.KW_NOT, 54), new Path(Tipo.VAZIO, 55)}, new Path[]{new Path(Tipo.SE, 94), new Path(Tipo.TE, 49), new Path(Tipo.FA, 52), new Path(Tipo.FA_, 53)}));
-        estados.put(81, new Estado(Tipo.E_, 81, 0));
+        estados.put(81, new Estado(Tipo.E_, 81, 1));
         estados.put(82, new Estado(Tipo.R, 82, 1));
         estados.put(83, new Estado(Tipo.R, 83, 1));
         estados.put(84, new Estado(Tipo.R, 84, 1));
@@ -118,7 +118,7 @@ public class Sintatico {
         estados.put(99, new Estado(Tipo.IS, 99, new Path[]{new Path(Tipo.KW_ELSE, 101), new Path(Tipo.VAZIO, 102)}, new Path[]{new Path(Tipo.IS_, 100)}));
         estados.put(100, new Estado(Tipo.IS, 100, 8));
         estados.put(101, new Estado(Tipo.IS_, 101, new Path[]{new Path(Tipo.SMB_OBC, 103)}, new Path[]{}));
-        estados.put(102, new Estado(Tipo.IS_, 102, 0));
+        estados.put(102, new Estado(Tipo.IS_, 102, 1));
         estados.put(103, new Estado(Tipo.IS_, 103, new Path[]{new Path(Tipo.VAZIO, 17), new Path(Tipo.ID, 24), new Path(Tipo.KW_IF, 25), new Path(Tipo.KW_READ, 27), new Path(Tipo.KW_WRITE, 28), new Path(Tipo.KW_WHILE, 29)}, new Path[]{new Path(Tipo.SL, 104), new Path(Tipo.S, 16), new Path(Tipo.AS, 18), new Path(Tipo.IS, 19), new Path(Tipo.WHS, 20), new Path(Tipo.RS, 21), new Path(Tipo.WRS, 22), new Path(Tipo.SP, 26)}));
         estados.put(104, new Estado(Tipo.IS_, 104, new Path[]{new Path(Tipo.SMB_CBC, 105)}, new Path[]{}));
         estados.put(105, new Estado(Tipo.IS_, 105, 4));
@@ -127,12 +127,13 @@ public class Sintatico {
         
         lexico = new Lexico();
         Token t = lexico.proximoToken();
-        int estadoAtual = 0;
+        int estadoAtual = 1;
         iniciaEstado(t, estadoAtual);
     }
     
     public static void iniciaEstado(Token t, int estadoAtual){
-        if(estados.get(estadoAtual).qntTokens != -1){
+        Estado e = estados.get(estadoAtual);
+        if(e.qntTokens == -1){
             shift(t, estadoAtual);
         }else{
             reduce(t, estadoAtual);
@@ -140,14 +141,25 @@ public class Sintatico {
     }
 
     public static void shift(Token t, int estadoAtual) {
-        for(Path p : estados.get(estadoAtual).shifts){
+        Estado e = estados.get(estadoAtual);
+        Path vazio = null;
+        for(Path p : e.shifts){
             if(p.entrada.equals(t.getTipo())){
+                System.out.println("SHIFT" + e.id);
                 estadoAtual = p.saida;
+                t = lexico.proximoToken();
+                iniciaEstado(t, estadoAtual);
                 return;
             }else if(p.entrada.equals(Tipo.VAZIO)){
-                
+                vazio = p;
+                return;
             }
         }
+        if(vazio != null){
+            estadoAtual = vazio.saida;
+            iniciaEstado(t, estadoAtual);
+        }
+        
     }
     
     public static void reduce(Token t, int estadoAtual){
