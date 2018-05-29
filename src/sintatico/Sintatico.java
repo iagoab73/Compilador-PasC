@@ -23,7 +23,7 @@ public class Sintatico {
         estados = new HashMap<>();
         estados.put(1, new Estado(Tipo.P, 1, new Path[]{new Path(Tipo.KW_PROGRAM, 2)}, new Path[]{}));
         estados.put(2, new Estado(Tipo.P, 2, new Path[]{new Path(Tipo.ID, 3)}, new Path[]{}));
-        estados.put(3, new Estado(Tipo.P, 3, new Path[]{new Path(Tipo.VAZIO, 7), new Path(Tipo.KW_NUM, 9), new Path(Tipo.KW_CHAR, 10)}, new Path[]{new Path(Tipo.E, 4), new Path(Tipo.DL, 5), new Path(Tipo.D, 6), new Path(Tipo.TY, 8)}));
+        estados.put(3, new Estado(Tipo.P, 3, new Path[]{new Path(Tipo.VAZIO, 7), new Path(Tipo.KW_NUM, 9), new Path(Tipo.KW_CHAR, 10)}, new Path[]{new Path(Tipo.B, 4), new Path(Tipo.DL, 5), new Path(Tipo.D, 6), new Path(Tipo.TY, 8)}));
         estados.put(4, new Estado(Tipo.P, 4, new Path[]{new Path(Tipo.EOF, 0)}, new Path[]{}));
         estados.put(5, new Estado(Tipo.B, 5, new Path[]{new Path(Tipo.SMB_OBC, 11)}, new Path[]{}));
         estados.put(6, new Estado(Tipo.DL, 6, new Path[]{new Path(Tipo.SMB_SEM, 12)}, new Path[]{}));
@@ -37,7 +37,7 @@ public class Sintatico {
         estados.put(14, new Estado(Tipo.IL, 14, new Path[]{new Path(Tipo.SMB_COM, 36), new Path(Tipo.VAZIO, 37)}, new Path[]{new Path(Tipo.IL_, 35)}));
         estados.put(15, new Estado(Tipo.B, 15, new Path[]{new Path(Tipo.SMB_CBC, 38)}, new Path[]{}));
         estados.put(16, new Estado(Tipo.SL, 16, new Path[]{new Path(Tipo.SMB_SEM, 39)}, new Path[]{}));
-        estados.put(17, new Estado(Tipo.SL, 17, 2));
+        estados.put(17, new Estado(Tipo.SL, 17, 1));
         estados.put(18, new Estado(Tipo.S, 18, 1));
         estados.put(19, new Estado(Tipo.S, 19, 1));
         estados.put(20, new Estado(Tipo.S, 20, 1));
@@ -126,8 +126,12 @@ public class Sintatico {
         
         
         lexico = new Lexico();
+        pilha = new Stack<>();
+        
+        
         Token t = lexico.proximoToken();
         int estadoAtual = 1;
+        pilha.push(estadoAtual);
         iniciaEstado(t, estadoAtual);
     }
     
@@ -145,28 +149,48 @@ public class Sintatico {
         Path vazio = null;
         for(Path p : e.shifts){
             if(p.entrada.equals(t.getTipo())){
-                System.out.println("SHIFT" + e.id);
+                if(t.getTipo().equals(Tipo.EOF)){
+                    System.out.println("FIM");
+                    return;
+                }
                 estadoAtual = p.saida;
+                pilha.push(estadoAtual);
+                System.out.println("SHIFT " + estadoAtual);
                 t = lexico.proximoToken();
                 iniciaEstado(t, estadoAtual);
                 return;
             }else if(p.entrada.equals(Tipo.VAZIO)){
                 vazio = p;
-                return;
             }
         }
         if(vazio != null){
             estadoAtual = vazio.saida;
+            pilha.push(estadoAtual);
+            System.out.println("SHIFT " + estadoAtual);
             iniciaEstado(t, estadoAtual);
-        }
-        
+        }  
     }
     
     public static void reduce(Token t, int estadoAtual){
-        
+        Estado e = estados.get(estadoAtual);
+        for(int i = 0; i < e.qntTokens; i++){
+            pilha.pop();
+        }
+        System.out.println("REDUCE " + pilha.peek());
+        goTo(e.naoTerminal, pilha.peek(), t);
     }
     
-    public static void goTo(){
+    public static void goTo(Tipo naoTerminal, int estadoAtual, Token t){
+        Estado e = estados.get(estadoAtual);
+        for(Path p : e.gotos){
+            if(p.entrada.equals(naoTerminal)){
+                estadoAtual = p.saida;
+                pilha.push(estadoAtual);
+                System.out.println("GOTO " + estadoAtual);
+                iniciaEstado(t, estadoAtual);
+                return;
+            }
+        }
         
     }
 
