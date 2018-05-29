@@ -30,6 +30,25 @@ public class Lexico {
      */
     public static RandomAccessFile arquivo;
     
+    public Lexico(){
+        try{
+            LeArquivo();
+            
+        }catch(Exception e){
+            System.out.println("Erro no arquivo!");
+        }
+    }
+    
+    public Token proximoToken(){
+        try{
+            Token t = ProximoToken();
+            System.out.println("\n< " + t.getTipo() + "  ,  '" + t.getLexema() + "' >    Linha: " + t.getLinha() + " ,\tColuna: " + t.getColuna());
+            return t;
+        }catch(Exception e){
+            System.out.println("\nErro no arquivo!");
+            return null;
+        }
+    }
     /**
      * Função responsável pela leitura inicial do arquivo.
      * @throws FileNotFoundException  - Caso o arquivo não seja encontrado
@@ -56,7 +75,7 @@ public class Lexico {
      * @return Retorna um token identificado pelas regras do automato com base nos caracteres apresentados no arquivo.
      * @throws IOException - Caso ocorra algum erro na leitura do arquivo.
      */
-    public static Token ProximoToken() throws IOException{
+    private static Token ProximoToken() throws IOException{
         StringBuilder lexema = new StringBuilder();
         
         estado = 0;

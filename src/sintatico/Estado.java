@@ -30,6 +30,16 @@ public class Estado {
         }
     }
     
+    public Estado(Tipo naoTerminal, int id, int qntTokens) {
+        this.naoTerminal = naoTerminal;
+        this.id = id;
+        this.qntTokens = qntTokens;
+        this.shifts = new Path[]{};
+        this.gotos = new Path[]{};
+        
+        System.out.println("\n" + this.id + ": " + this.naoTerminal + " - " + this.qntTokens);
+    }
+    
     public void setQntTokens(int qntTokens){
         this.qntTokens = qntTokens;
     }
