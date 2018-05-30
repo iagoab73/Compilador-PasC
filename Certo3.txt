@@ -1,0 +1,6 @@
+program testeTres
+char CompilaJesusCristo;
+{
+teste = teste4; 
+teste1 = 124524.14; 
+teste2 =(not 2222);}

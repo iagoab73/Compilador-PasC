@@ -1,0 +1,7 @@
+program 
+num CompilaJesusAmado; 
+char texto;
+char se;
+char Compilar;
+char deus;
+char existe;{}

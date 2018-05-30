@@ -1,0 +1,7 @@
+program testeDois 
+num CompilaGod; 
+char texto;
+char se;
+char Compilar;
+char deus;
+char existe;}

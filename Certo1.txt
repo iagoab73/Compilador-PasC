@@ -1,0 +1,4 @@
+program testeUm
+num teste;
+{while (22332+valor1){};
+write "l";}

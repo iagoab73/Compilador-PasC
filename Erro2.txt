@@ -1,0 +1,8 @@
+program testeUm
+char caracter,carater,carta;
+
+num a = 1;
+
+{teste = not teste / teste+teste;
+if (not teste){teste = teste;}
+ else{};}

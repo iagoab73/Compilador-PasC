@@ -1,7 +1,9 @@
 package sintatico;
 
+import java.util.ArrayList;
 import lexico.Tipo;
 import java.util.HashMap;
+import java.util.List;
 import java.util.Stack;
 import lexico.Lexico;
 import lexico.Token;
@@ -15,6 +17,7 @@ public class Sintatico {
     static Lexico lexico;
     static HashMap<Integer, Estado> estados;
     static Stack<Integer> pilha;
+    static List<Tipo> esperados;
     static int contErro = 0;
 
     /**
@@ -124,11 +127,9 @@ public class Sintatico {
         estados.put(104, new Estado(Tipo.IS_, 104, new Path[]{new Path(Tipo.SMB_CBC, 105)}, new Path[]{}));
         estados.put(105, new Estado(Tipo.IS_, 105, 4));
         
-        
-        
         lexico = new Lexico();
         pilha = new Stack<>();
-        
+        esperados = new ArrayList<>();
         
         Token t = lexico.proximoToken();
         int estadoAtual = 1;
@@ -147,6 +148,7 @@ public class Sintatico {
 
     public static void shift(Token t, int estadoAtual) {
         Estado e = estados.get(estadoAtual);
+        adicionaEsperados(e.shifts);
         Path vazio = null;
         for(Path p : e.shifts){
             if(p.entrada.equals(t.getTipo())){
@@ -156,7 +158,8 @@ public class Sintatico {
                 }
                 estadoAtual = p.saida;
                 pilha.push(estadoAtual);
-                System.out.println("SHIFT " + estadoAtual);
+                System.out.println(pilhaToString() + t.getLexema() + "\"\tSHIFT " + estadoAtual);
+                esperados.clear();
                 t = lexico.proximoToken();
                 iniciaEstado(t, estadoAtual);
                 return;
@@ -167,12 +170,12 @@ public class Sintatico {
         if(vazio != null){
             estadoAtual = vazio.saida;
             pilha.push(estadoAtual);
-            System.out.println("SHIFT " + estadoAtual);
+            System.out.println(pilhaToString() + t.getLexema() + "\"\tSHIFT " + estadoAtual);
             iniciaEstado(t, estadoAtual);
         }else{
             System.out.println("ERRO, esperados:");
-            for(Path p : e.shifts){
-                System.out.println(p.entrada);
+            for(Tipo tipo : esperados){
+                System.out.println(tipo);
             }
             if(contErro > 3){
                 return;
@@ -188,7 +191,7 @@ public class Sintatico {
         for(int i = 0; i < e.qntTokens; i++){
             pilha.pop();
         }
-        System.out.println("REDUCE " + pilha.peek());
+        System.out.println(pilhaToString() + t.getLexema() + "\"\tREDUCE " + pilha.peek());
         goTo(e.naoTerminal, pilha.peek(), t);
     }
     
@@ -198,12 +201,27 @@ public class Sintatico {
             if(p.entrada.equals(naoTerminal)){
                 estadoAtual = p.saida;
                 pilha.push(estadoAtual);
-                System.out.println("GOTO " + estadoAtual);
+                System.out.println(pilhaToString() + t.getLexema() + "\"\tGOTO " + estadoAtual);
                 iniciaEstado(t, estadoAtual);
                 return;
             }
-        }
-        
+        } 
     }
-
+    
+    public static String pilhaToString(){
+        String pS = "";
+        for(int i = 0; i < pilha.size(); i++){
+            pS = (pS + pilha.get(i) + " " );
+        }
+        pS = pS + "\"\t";
+        return pS;
+    }
+    
+    public static void adicionaEsperados(Path[] esp){
+        for(Path p : esp){
+            if(!esperados.contains(p.entrada) && !p.entrada.equals(Tipo.VAZIO)){
+                esperados.add(p.entrada);
+            }
+        }
+    }
 }
