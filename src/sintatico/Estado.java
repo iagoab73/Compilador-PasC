@@ -20,15 +20,6 @@ public class Estado {
         this.shifts = shifts;
         this.gotos = gotos;
         this.qntTokens = -1;
-        //System.out.println("\n" + this.id + ": " + this.naoTerminal);
-        
-        /*for(int i=0;i<shifts.length;i++){
-            System.out.println(shifts[i].entrada + " " + shifts[i].saida);
-        }
-        
-        for(int i=0;i<gotos.length;i++){
-            System.out.println(gotos[i].entrada + " " + gotos[i].saida);
-        }*/
     }
     
     public Estado(Tipo naoTerminal, int id, int qntTokens) {
@@ -37,11 +28,5 @@ public class Estado {
         this.qntTokens = qntTokens;
         this.shifts = new Path[]{};
         this.gotos = new Path[]{};
-        
-        //System.out.println("\n" + this.id + ": " + this.naoTerminal + " - " + this.qntTokens);
-    }
-    
-    public void setQntTokens(int qntTokens){
-        this.qntTokens = qntTokens;
     }
 }

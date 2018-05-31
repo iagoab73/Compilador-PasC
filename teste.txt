@@ -1,12 +1,12 @@
 program Compilador{
 
-    number = ;
+    number = 12654;
     numa = 3;
     char1 = 'a';
     char2 = 'j';
     char3 = 'n';
 
-    if (number<numee){
+    if (number<){
         write(char2);
     };
 }

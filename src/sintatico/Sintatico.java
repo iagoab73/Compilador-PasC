@@ -125,7 +125,7 @@ public class Sintatico {
         estados.put(102, new Estado(Tipo.IS_, 102, 1));
         estados.put(103, new Estado(Tipo.IS_, 103, new Path[]{new Path(Tipo.VAZIO, 17), new Path(Tipo.ID, 24), new Path(Tipo.KW_IF, 25), new Path(Tipo.KW_READ, 27), new Path(Tipo.KW_WRITE, 28), new Path(Tipo.KW_WHILE, 29)}, new Path[]{new Path(Tipo.SL, 104), new Path(Tipo.S, 16), new Path(Tipo.AS, 18), new Path(Tipo.IS, 19), new Path(Tipo.WHS, 20), new Path(Tipo.RS, 21), new Path(Tipo.WRS, 22), new Path(Tipo.SP, 26)}));
         estados.put(104, new Estado(Tipo.IS_, 104, new Path[]{new Path(Tipo.SMB_CBC, 105)}, new Path[]{}));
-        estados.put(105, new Estado(Tipo.IS_, 105, 4));
+        estados.put(105, new Estado(Tipo.IS_, 105, 4));        
         
         lexico = new Lexico();
         pilha = new Stack<>();
@@ -158,7 +158,7 @@ public class Sintatico {
                 }
                 estadoAtual = p.saida;
                 pilha.push(estadoAtual);
-                System.out.println(pilhaToString() + t.getLexema() + "\"\tSHIFT " + estadoAtual);
+                System.out.println("\tSHIFT " + estadoAtual);
                 esperados.clear();
                 t = lexico.proximoToken();
                 iniciaEstado(t, estadoAtual);
@@ -170,14 +170,15 @@ public class Sintatico {
         if(vazio != null){
             estadoAtual = vazio.saida;
             pilha.push(estadoAtual);
-            System.out.println(pilhaToString() + t.getLexema() + "\"\tSHIFT " + estadoAtual);
+            System.out.println("\tSHIFT " + estadoAtual);
             iniciaEstado(t, estadoAtual);
         }else{
-            System.out.println("ERRO, esperados:");
+            System.out.println("\nErro Sintático, " + t.getLexema() + " encontrado. Esperado(s): ");
             for(Tipo tipo : esperados){
-                System.out.println(tipo);
+                System.out.println("- " + tipo);
             }
             if(contErro > 3){
+                System.out.println("Compilação abortada. Cinco erros sintáticos encontrados.");
                 return;
             }
             contErro++;
@@ -191,7 +192,7 @@ public class Sintatico {
         for(int i = 0; i < e.qntTokens; i++){
             pilha.pop();
         }
-        System.out.println(pilhaToString() + t.getLexema() + "\"\tREDUCE " + pilha.peek());
+        System.out.println("\tREDUCE " + pilha.peek());
         goTo(e.naoTerminal, pilha.peek(), t);
     }
     
@@ -201,20 +202,11 @@ public class Sintatico {
             if(p.entrada.equals(naoTerminal)){
                 estadoAtual = p.saida;
                 pilha.push(estadoAtual);
-                System.out.println(pilhaToString() + t.getLexema() + "\"\tGOTO " + estadoAtual);
+                System.out.println("\tGOTO " + estadoAtual);
                 iniciaEstado(t, estadoAtual);
                 return;
             }
         } 
-    }
-    
-    public static String pilhaToString(){
-        String pS = "";
-        for(int i = 0; i < pilha.size(); i++){
-            pS = (pS + pilha.get(i) + " " );
-        }
-        pS = pS + "\"\t";
-        return pS;
     }
     
     public static void adicionaEsperados(Path[] esp){
