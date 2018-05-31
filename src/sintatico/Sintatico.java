@@ -9,21 +9,37 @@ import lexico.Lexico;
 import lexico.Token;
 
 /**
- *
+ * Sintatico.java - Classe principal do Analisador Sintatico.
  * @author Iago Arantes, Jean Silva
  */
 public class Sintatico {
-
+    /**
+     * Instância do analisador léxico, que dará ao sintático os tokens a serem analisados.
+     */
     static Lexico lexico;
+    /**
+     * Estrutura de dados que guarda os estados correspondentes aos estados do autômato.
+     */
     static HashMap<Integer, Estado> estados;
+    /**
+     * Pilha de estados, que guarda o histórico da movimentação pelo autômato.
+     */
     static Stack<Integer> pilha;
+    /**
+     * Lista de tipos de tokens esperados. Foi necessária a implementação dessa lista para guardar os tokens esperados no caso de erro.
+     */
     static List<Tipo> esperados;
+    /**
+     * Contador de erros sintáticos.
+     */
     static int contErro = 0;
 
     /**
+     * Método principal da classe Sintático, responsável por inicializar os itens acima e começar a análise.
      * @param args the command line arguments
      */
     public static void main(String[] args) {
+        // Estados é inicializado e os estados do autômato são inseridos. Na classe Estado e Path é possível ver o que cada um dos parâmetros significa.
         estados = new HashMap<>();
         estados.put(1, new Estado(Tipo.P, 1, new Path[]{new Path(Tipo.KW_PROGRAM, 2)}, new Path[]{}));
         estados.put(2, new Estado(Tipo.P, 2, new Path[]{new Path(Tipo.ID, 3)}, new Path[]{}));
@@ -127,21 +143,32 @@ public class Sintatico {
         estados.put(104, new Estado(Tipo.IS_, 104, new Path[]{new Path(Tipo.SMB_CBC, 105)}, new Path[]{}));
         estados.put(105, new Estado(Tipo.IS_, 105, 4));        
         
+        // Analisador léxico é inicializado, juntamente com a pilha e a lista de tokens esperados.
         lexico = new Lexico();
         pilha = new Stack<>();
         esperados = new ArrayList<>();
         
+        // O primeiro token é recebido, enviado após a análise do analisador léxico.
         Token t = lexico.proximoToken();
+        // Variável que guarda o estado atual do autômato, começa com o valor 1 (Estado Inicial).
         int estadoAtual = 1;
+        // Insere o estado atual na pilha.
         pilha.push(estadoAtual);
+        // Inicia as verificações no estado inicial, enviando tanto o estado quanto o token atual.
         iniciaEstado(t, estadoAtual);
     }
     
+    /**
+     * Método responsável pela verificação inicial do estado, identificando se o estado atual é um estado de shift ou reduce.
+     * @param t Token a ser analisado no momento.
+     * @param estadoAtual Estado atual do autômato.
+     */
     public static void iniciaEstado(Token t, int estadoAtual){
+        // Pega o estado atual da lista de estados.
         Estado e = estados.get(estadoAtual);
-        if(e.qntTokens == -1){
+        if(e.qntTokens == -1){ // Uma quantidade de Tokens igual a -1 é como indicamos um estado de SHIFT
             shift(t, estadoAtual);
-        }else{
+        }else{ // Caso o valor da quantidade de Tokens não seja -1, o estado é de REDUCE.
             reduce(t, estadoAtual);
         }
     }
