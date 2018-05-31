@@ -164,8 +164,7 @@ public class Sintatico {
      * @param estadoAtual Estado atual do autômato.
      */
     public static void iniciaEstado(Token t, int estadoAtual){
-        // Pega o estado atual da lista de estados.
-        Estado e = estados.get(estadoAtual);
+        Estado e = estados.get(estadoAtual); // Pega o estado atual da lista de estados.
         if(e.qntTokens == -1){ // Uma quantidade de Tokens igual a -1 é como indicamos um estado de SHIFT
             shift(t, estadoAtual);
         }else{ // Caso o valor da quantidade de Tokens não seja -1, o estado é de REDUCE.
@@ -173,9 +172,14 @@ public class Sintatico {
         }
     }
 
+    /**
+     * Método responsável pela operação SHIFT - Compara o token atual com os tipos de token aceitos pelo estado atual, avançando caso sejam compatíveis -
+     * Caso a cadeia vazia seja um dos tipos aceitos pelo estado e nenhum outro tipo do estado seja igual ao token atual, é feito um shift sem avançar o token atual.
+     * @param t Token a ser analisado no momento.
+     * @param estadoAtual Estado atual do autômato.
+     */
     public static void shift(Token t, int estadoAtual) {
-        Estado e = estados.get(estadoAtual);
-        adicionaEsperados(e.shifts);
+        Estado e = estados.get(estadoAtual); // Pega o estado atual da lista de estados.
         Path vazio = null;
         for(Path p : e.shifts){
             if(p.entrada.equals(t.getTipo())){
@@ -194,6 +198,7 @@ public class Sintatico {
                 vazio = p;
             }
         }
+        adicionaEsperados(e.shifts);
         if(vazio != null){
             estadoAtual = vazio.saida;
             pilha.push(estadoAtual);
