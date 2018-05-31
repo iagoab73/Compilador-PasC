@@ -33,6 +33,21 @@ public class Sintatico {
      * Contador de erros sintáticos.
      */
     static int contErro = 0;
+    
+    /**
+     * Indicador do fim do arquivo.
+     */
+    static boolean fim = false;
+    
+    /**
+     * Variável que guarda o token atual.
+     */
+    static Token t;
+    
+    /**
+     * Variável que guarda o estado atual do autômato.
+     */
+    static int estadoAtual;
 
     /**
      * Método principal da classe Sintático, responsável por inicializar os itens acima e começar a análise.
@@ -149,42 +164,41 @@ public class Sintatico {
         esperados = new ArrayList<>();
         
         // O primeiro token é recebido, enviado após a análise do analisador léxico.
-        Token t = lexico.proximoToken();
+        t = lexico.proximoToken();
         // Variável que guarda o estado atual do autômato, começa com o valor 1 (Estado Inicial).
-        int estadoAtual = 1;
+        estadoAtual = 1;
         // Insere o estado atual na pilha.
         pilha.push(estadoAtual);
         // Inicia as verificações no estado inicial, enviando tanto o estado quanto o token atual.
-        iniciaEstado(t, estadoAtual);
+        iniciaEstado();
     }
     
     /**
      * Método responsável pela verificação inicial do estado, identificando se o estado atual é um estado de shift ou reduce.
-     * @param t Token a ser analisado no momento.
-     * @param estadoAtual Estado atual do autômato.
      */
-    public static void iniciaEstado(Token t, int estadoAtual){
-        Estado e = estados.get(estadoAtual); // Pega o estado atual da lista de estados.
-        if(e.qntTokens == -1){ // Uma quantidade de Tokens igual a -1 é como indicamos um estado de SHIFT.
-            shift(t, estadoAtual);
-        }else{ // Caso o valor da quantidade de Tokens não seja -1, o estado é de REDUCE.
-            reduce(t, estadoAtual);
+    public static void iniciaEstado(){
+        while(!fim){ // Enquanto não estamos no fim do arquivo.
+            Estado e = estados.get(estadoAtual); // Pega o estado atual da lista de estados.
+            if(e.qntTokens == -1){ // Uma quantidade de Tokens igual a -1 é como indicamos um estado de SHIFT.
+                shift();
+            }else{ // Caso o valor da quantidade de Tokens não seja -1, o estado é de REDUCE.
+                reduce();
+            }   
         }
     }
 
     /**
      * Método responsável pela operação SHIFT - Compara o token atual com os tipos de token aceitos pelo estado atual, avançando caso sejam compatíveis -
      * Caso a cadeia vazia seja um dos tipos aceitos pelo estado e nenhum outro tipo do estado seja igual ao token atual, é feito um shift sem avançar o token atual.
-     * @param t Token a ser analisado no momento.
-     * @param estadoAtual Estado atual do autômato.
      */
-    public static void shift(Token t, int estadoAtual) {
+    public static void shift() {
         Estado e = estados.get(estadoAtual); // Pega o estado atual da lista de estados.
         Path vazio = null; // Variável que guarda o caminho com cadeia vazia do estado caso ele tenha um.
         for(Path p : e.shifts){ // Passa por todos os caminhos do estado.
             if(p.entrada.equals(t.getTipo())){ // Verifica se a entrada de cada caminho é igual ao tipo do token.
                 if(t.getTipo().equals(Tipo.EOF)){ // Verifica se é o fim do arquivo.
                     System.out.println("FIM"); // Mostra a mensagem e retorna.
+                    fim = true;
                     return;
                 }
                 estadoAtual = p.saida; // Avança o estado atual para o destino do caminho.
@@ -192,7 +206,6 @@ public class Sintatico {
                 System.out.println("\tSHIFT " + estadoAtual); // Mensagem de confirmação do SHIFT.
                 esperados.clear(); // Limpa a lista de esperados, já que não ocorreu erro com o Token.
                 t = lexico.proximoToken(); // Recebe o próximo token do Léxico.
-                iniciaEstado(t, estadoAtual); // Inicia o próximo estado.
                 return;
             }else if(p.entrada.equals(Tipo.VAZIO)){ // Caso haja um caminho em cadeia vazia, apenas o salva na variável vazio. 
                 vazio = p; //Um shift com vazio só pode ser feito caso nenhum dos tipos verificados se encaixe com o tipo do token atual.
@@ -203,7 +216,6 @@ public class Sintatico {
             estadoAtual = vazio.saida; // Realiza os passos acima descritos, porém sem avançar o token.
             pilha.push(estadoAtual);
             System.out.println("\tSHIFT " + estadoAtual);
-            iniciaEstado(t, estadoAtual);
         }else{ // Se não for o caso, dá erro.
             System.out.println("\nErro Sintático, " + t.getLexema() + " encontrado. Esperado(s): ");
             for(Tipo tipo : esperados){ // Mostra os tipos esperados
@@ -215,38 +227,32 @@ public class Sintatico {
                 return;
             }
             t = lexico.proximoToken(); // Para o modo pânico, mantemos o autômato no mesmo estado e avançamos o token de entrada.
-            iniciaEstado(t, estadoAtual); // Chamamos novamente a função de início de estado, mas com o próximo token.
         }
     }
     
     /**
      * Método responsável pela operação REDUCE - Desempilha a quantidade necessária de itens e "empilha" o não terminal correspondente ao estado atual.
-     * @param t Token a ser analisado no momento.
-     * @param estadoAtual Estado atual do autômato.
      */
-    public static void reduce(Token t, int estadoAtual){
+    public static void reduce(){
         Estado e = estados.get(estadoAtual); // Pega o estado atual da lista de estados.
         for(int i = 0; i < e.qntTokens; i++){ // Desempilha os estados com base na quantidade de tokens do estado.
             pilha.pop();
         }
         System.out.println("\tREDUCE " + pilha.peek()); // Mensagem de confirmação do REDUCE.
-        goTo(e.naoTerminal, pilha.peek(), t); // Chama o método do GOTO, mandando como parâmetro o não terminal deste estado, o topo da pilha e o token atual.
+        goTo(e.naoTerminal); // Chama o método do GOTO, mandando como parâmetro o não terminal deste estado.
     }
     
     /**
      * Método responsável pela operação GOTO - Verifica o não terminal enviado pelo REDUCE e compara com as entradas os caminhos do estado atual, afim de ir até o estado destino.
      * @param naoTerminal Não terminal que será usado para indicar o estado para o qual iremos com o GOTO.
-     * @param estadoAtual Estado do topo da pilha, para o qual demos REDUCE.
-     * @param t Token atual.
      */
-    public static void goTo(Tipo naoTerminal, int estadoAtual, Token t){
-        Estado e = estados.get(estadoAtual); // Pega o estado atual da lista de estados.
+    public static void goTo(Tipo naoTerminal){
+        Estado e = estados.get(pilha.peek()); // Pega o estado atual (topo da pilha) da lista de estados.
         for(Path p : e.gotos){ // Para cada caminho de goTos do estado atual
             if(p.entrada.equals(naoTerminal)){ // Verifica se a entrada equivale ao não terminal enviado.
                 estadoAtual = p.saida; // Avança o estado com base no destino do caminho.
                 pilha.push(estadoAtual); // Empilha o próximo estado.
                 System.out.println("\tGOTO " + estadoAtual); // Mensagem de confirmação do GOTO.
-                iniciaEstado(t, estadoAtual); // Inicia o próximo estado.
                 return;
             }
         } 

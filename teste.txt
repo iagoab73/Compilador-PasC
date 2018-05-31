@@ -1,36 +1,18 @@
-Program teste
+program IMC
 
-//declarações
-
-num gaybriel;
-
-char otavianocomeu;
+num altura;
+num peso;
+num resultado;
+char texto;
 
 {
+   write "Digite seu peso:";
+   read peso;
+   write "Digite sua altura:";
+   read altura;
 
-	read teste3;
+   resultado = peso / (altura * altura);
 
-	if ((bola)== not teste4  or teste5 /teste6)
-
-	{
-		
-		while (bola)
-{
-
-		};
-		if (bola2){
-
-		}
-else {
-
-		};
-	}
-else{
-
-		If(bola3)
-{
-
-		};
-
-	};
+   write "Seu IMC é:";
+   write resultado;
 }
