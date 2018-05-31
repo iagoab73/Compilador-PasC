@@ -30,15 +30,22 @@ public class Lexico {
      */
     public static RandomAccessFile arquivo;
     
+    
+    /**
+     * Construtor da classe Lexico, apenas inicia o arquivo.
+     */
     public Lexico(){
         try{
             LeArquivo();
-            
         }catch(IOException e){
             System.out.println("\nErro no arquivo!");
         }
     }
     
+    /**
+     * Método responsável por retornar o próximo token do programa.
+     * @return O próximo token analisado pelo Léxico.
+     */
     public Token proximoToken(){
         try{
             Token t = ProximoToken();

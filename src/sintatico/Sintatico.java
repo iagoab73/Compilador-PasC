@@ -165,7 +165,7 @@ public class Sintatico {
      */
     public static void iniciaEstado(Token t, int estadoAtual){
         Estado e = estados.get(estadoAtual); // Pega o estado atual da lista de estados.
-        if(e.qntTokens == -1){ // Uma quantidade de Tokens igual a -1 é como indicamos um estado de SHIFT
+        if(e.qntTokens == -1){ // Uma quantidade de Tokens igual a -1 é como indicamos um estado de SHIFT.
             shift(t, estadoAtual);
         }else{ // Caso o valor da quantidade de Tokens não seja -1, o estado é de REDUCE.
             reduce(t, estadoAtual);
@@ -180,71 +180,86 @@ public class Sintatico {
      */
     public static void shift(Token t, int estadoAtual) {
         Estado e = estados.get(estadoAtual); // Pega o estado atual da lista de estados.
-        Path vazio = null;
-        for(Path p : e.shifts){
-            if(p.entrada.equals(t.getTipo())){
-                if(t.getTipo().equals(Tipo.EOF)){
-                    System.out.println("FIM");
+        Path vazio = null; // Variável que guarda o caminho com cadeia vazia do estado caso ele tenha um.
+        for(Path p : e.shifts){ // Passa por todos os caminhos do estado.
+            if(p.entrada.equals(t.getTipo())){ // Verifica se a entrada de cada caminho é igual ao tipo do token.
+                if(t.getTipo().equals(Tipo.EOF)){ // Verifica se é o fim do arquivo.
+                    System.out.println("FIM"); // Mostra a mensagem e retorna.
                     return;
                 }
-                estadoAtual = p.saida;
-                pilha.push(estadoAtual);
-                System.out.println("\tSHIFT " + estadoAtual);
-                esperados.clear();
-                t = lexico.proximoToken();
-                iniciaEstado(t, estadoAtual);
+                estadoAtual = p.saida; // Avança o estado atual para o destino do caminho.
+                pilha.push(estadoAtual); // Insere o novo estado na pilha.
+                System.out.println("\tSHIFT " + estadoAtual); // Mensagem de confirmação do SHIFT.
+                esperados.clear(); // Limpa a lista de esperados, já que não ocorreu erro com o Token.
+                t = lexico.proximoToken(); // Recebe o próximo token do Léxico.
+                iniciaEstado(t, estadoAtual); // Inicia o próximo estado.
                 return;
-            }else if(p.entrada.equals(Tipo.VAZIO)){
-                vazio = p;
+            }else if(p.entrada.equals(Tipo.VAZIO)){ // Caso haja um caminho em cadeia vazia, apenas o salva na variável vazio. 
+                vazio = p; //Um shift com vazio só pode ser feito caso nenhum dos tipos verificados se encaixe com o tipo do token atual.
             }
         }
-        adicionaEsperados(e.shifts);
-        if(vazio != null){
-            estadoAtual = vazio.saida;
+        adicionaEsperados(e.shifts); // Nenhum tipo correspondeu ao tipo do token, portanto pode haver erro. Por isso começa a preencher a lista de esperados.
+        if(vazio != null){ // Caso haja caminho com cadeia vazia.
+            estadoAtual = vazio.saida; // Realiza os passos acima descritos, porém sem avançar o token.
             pilha.push(estadoAtual);
             System.out.println("\tSHIFT " + estadoAtual);
             iniciaEstado(t, estadoAtual);
-        }else{
+        }else{ // Se não for o caso, dá erro.
             System.out.println("\nErro Sintático, " + t.getLexema() + " encontrado. Esperado(s): ");
-            for(Tipo tipo : esperados){
+            for(Tipo tipo : esperados){ // Mostra os tipos esperados
                 System.out.println("- " + tipo);
             }
-            if(contErro > 3){
-                System.out.println("Compilação abortada. Cinco erros sintáticos encontrados.");
+            contErro++;
+            if(contErro > 4){ // Caso a contagem de erros sintáticos for superior à 4.
+                System.out.println("Compilação abortada. Cinco erros sintáticos encontrados."); // Mostra a mensagem e termina compilação.
                 return;
             }
-            contErro++;
-            t = lexico.proximoToken();
-            iniciaEstado(t, estadoAtual);
+            t = lexico.proximoToken(); // Para o modo pânico, mantemos o autômato no mesmo estado e avançamos o token de entrada.
+            iniciaEstado(t, estadoAtual); // Chamamos novamente a função de início de estado, mas com o próximo token.
         }
     }
     
+    /**
+     * Método responsável pela operação REDUCE - Desempilha a quantidade necessária de itens e "empilha" o não terminal correspondente ao estado atual.
+     * @param t Token a ser analisado no momento.
+     * @param estadoAtual Estado atual do autômato.
+     */
     public static void reduce(Token t, int estadoAtual){
-        Estado e = estados.get(estadoAtual);
-        for(int i = 0; i < e.qntTokens; i++){
+        Estado e = estados.get(estadoAtual); // Pega o estado atual da lista de estados.
+        for(int i = 0; i < e.qntTokens; i++){ // Desempilha os estados com base na quantidade de tokens do estado.
             pilha.pop();
         }
-        System.out.println("\tREDUCE " + pilha.peek());
-        goTo(e.naoTerminal, pilha.peek(), t);
+        System.out.println("\tREDUCE " + pilha.peek()); // Mensagem de confirmação do REDUCE.
+        goTo(e.naoTerminal, pilha.peek(), t); // Chama o método do GOTO, mandando como parâmetro o não terminal deste estado, o topo da pilha e o token atual.
     }
     
+    /**
+     * Método responsável pela operação GOTO - Verifica o não terminal enviado pelo REDUCE e compara com as entradas os caminhos do estado atual, afim de ir até o estado destino.
+     * @param naoTerminal Não terminal que será usado para indicar o estado para o qual iremos com o GOTO.
+     * @param estadoAtual Estado do topo da pilha, para o qual demos REDUCE.
+     * @param t Token atual.
+     */
     public static void goTo(Tipo naoTerminal, int estadoAtual, Token t){
-        Estado e = estados.get(estadoAtual);
-        for(Path p : e.gotos){
-            if(p.entrada.equals(naoTerminal)){
-                estadoAtual = p.saida;
-                pilha.push(estadoAtual);
-                System.out.println("\tGOTO " + estadoAtual);
-                iniciaEstado(t, estadoAtual);
+        Estado e = estados.get(estadoAtual); // Pega o estado atual da lista de estados.
+        for(Path p : e.gotos){ // Para cada caminho de goTos do estado atual
+            if(p.entrada.equals(naoTerminal)){ // Verifica se a entrada equivale ao não terminal enviado.
+                estadoAtual = p.saida; // Avança o estado com base no destino do caminho.
+                pilha.push(estadoAtual); // Empilha o próximo estado.
+                System.out.println("\tGOTO " + estadoAtual); // Mensagem de confirmação do GOTO.
+                iniciaEstado(t, estadoAtual); // Inicia o próximo estado.
                 return;
             }
         } 
     }
     
+    /**
+     * Método para inserção de caminhos à lista de tipos de tokens esperados.
+     * @param esp Lista de caminhos a serem adicionados a lista de esperados 
+     */
     public static void adicionaEsperados(Path[] esp){
-        for(Path p : esp){
-            if(!esperados.contains(p.entrada) && !p.entrada.equals(Tipo.VAZIO)){
-                esperados.add(p.entrada);
+        for(Path p : esp){ // Para cada caminho enviado
+            if(!esperados.contains(p.entrada) && !p.entrada.equals(Tipo.VAZIO)){ // Caso não esteja na lista...
+                esperados.add(p.entrada); // Faz a inserção.
             }
         }
     }
