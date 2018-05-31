@@ -1,14 +1,36 @@
-program Compilador{
+Program teste
 
-    write "asd_asd";
-    numa = 3;
-    char1 = '_';
-    char2 = 'j';
-    char3 = 'n';
+//declarações
 
-    if (number<a){
-        write(char2);
-    }else{
-	read j;
-    };
+num gaybriel;
+
+char otavianocomeu;
+
+{
+
+	read teste3;
+
+	if ((bola)== not teste4  or teste5 /teste6)
+
+	{
+		
+		while (bola)
+{
+
+		};
+		if (bola2){
+
+		}
+else {
+
+		};
+	}
+else{
+
+		If(bola3)
+{
+
+		};
+
+	};
 }

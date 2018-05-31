@@ -90,7 +90,7 @@ public class Lexico {
             char c_atual;
             c_atual_cod = arquivo.read();
             c_atual = (char) c_atual_cod;
-            Character.toLowerCase(c_atual);
+            c_atual = Character.toLowerCase(c_atual);
             coluna++;
 
             switch(estado){
