@@ -30,11 +30,11 @@ public class Sintatico {
      */
     static Stack<Integer> pilha;
     /**
-     * Lista de tipos de tokens esperados. Foi necessária a implementação dessa lista para guardar os tokens esperados no caso de erro.
+     * Lista de tipos de tokens esperados - Foi necessária a implementação dessa lista para guardar os tokens esperados no caso de erro.
      */
     static List<Tipo> esperados;
     /**
-     * Estrutura que guarda os exemplos dos tokens esperados que serão mostrados em caso de erro;
+     * Estrutura que guarda os exemplos dos tokens esperados que serão mostrados em caso de erro.
      */
     static HashMap<Tipo, String> exemploEsperados;
     /**
@@ -68,24 +68,17 @@ public class Sintatico {
      */
     public static void main(String[] args) {
         insereEstados(); // Cria a estrutura de estados.
-        
         // Analisador léxico é inicializado, juntamente com a pilha e a lista de tokens esperados.
         lexico = new Lexico(nomeArquivo);
         pilha = new Stack<>();
         esperados = new ArrayList<>();
-        
         insereExemplosEsperados(); // Cria a estrutura de exemplos dos tokens esperados.
-        
-        
-        // O primeiro token é recebido, enviado após a análise do analisador léxico.
-        t = lexico.proximoToken();
-        // Variável que guarda o estado atual do autômato, começa com o valor 1 (Estado Inicial).
-        estadoAtual = 1;
-        // Insere o estado atual na pilha.
-        pilha.push(estadoAtual);
-        // Inicia as verificações no estado inicial, enviando tanto o estado quanto o token atual.
-        iniciaEstado();
+        t = lexico.proximoToken();// O primeiro token é recebido, enviado após a análise do analisador léxico.
+        estadoAtual = 1; // Variável que guarda o estado atual do autômato, começa com o valor 1 (Estado Inicial).
+        pilha.push(estadoAtual); // Insere o estado atual na pilha.
+        iniciaEstado();// Inicia as verificações no estado inicial.
     }
+    
     /**
      * Método responsável por inserir os estados do autômato na estrutura estados.
      */
@@ -282,7 +275,7 @@ public class Sintatico {
             pilha.push(estadoAtual);
             System.out.println("\tSHIFT " + estadoAtual);
         }else{ // Se não for o caso, dá erro.
-            pilha = (Stack<Integer>) pilhaBackup.clone(); // Ocorreu um erro e podem ter ocorrido movimentações entre os estado que prejudicariam o funcionamento seguinte do analisador. Por isso recuperamos o estado da pilha antes dessas movimentações.
+            pilha = (Stack<Integer>) pilhaBackup.clone(); // Ocorreu um erro e podem ter ocorrido movimentações entre os estados que prejudicariam o funcionamento seguinte do analisador. Por isso recuperamos o estado da pilha antes dessas movimentações.
             estadoAtual = pilha.peek(); // O estado atual é o topo da pilha.
             System.out.println("\nErro Sintático na linha " + t.getLinha() + " e coluna " + t.getColuna() + ". '" + t.getLexema() + "' encontrado. Esperado(s): ");
             for(Tipo tipo : esperados){ // Mostra os tipos esperados.
