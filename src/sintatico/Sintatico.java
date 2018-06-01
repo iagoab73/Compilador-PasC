@@ -14,6 +14,10 @@ import lexico.Token;
  */
 public class Sintatico {
     /**
+     * Nome do arquivo a ser lido pelo programa.
+     */
+    public static String nomeArquivo = "teste.txt";
+    /**
      * Instância do analisador léxico, que dará ao sintático os tokens a serem analisados.
      */
     static Lexico lexico;
@@ -66,7 +70,7 @@ public class Sintatico {
         insereEstados(); // Cria a estrutura de estados.
         
         // Analisador léxico é inicializado, juntamente com a pilha e a lista de tokens esperados.
-        lexico = new Lexico();
+        lexico = new Lexico(nomeArquivo);
         pilha = new Stack<>();
         esperados = new ArrayList<>();
         

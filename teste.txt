@@ -1,4 +1,4 @@
-program I_MC
+program IMC
 
 num altura;
 num peso;
@@ -6,6 +6,15 @@ num resultado;
 char texto;
 
 {
+   write "Digite seu peso:";
+   read peso;
+   write "Digite sua altura:";
+   read altura;
+
+   resultado = peso / (altura * altura);
+
+   write "Seu IMC é:";
+   write resultado;
    write "Digite seu peso:";
    read peso;
    write "Digite sua altura:";

@@ -38,9 +38,9 @@ public class Lexico {
     /**
      * Construtor da classe Lexico, apenas inicia o arquivo.
      */
-    public Lexico(){
+    public Lexico(String nomeArquivo){
         try{
-            LeArquivo();
+            LeArquivo(nomeArquivo);
         }catch(IOException e){
             System.out.println("\nErro no arquivo!");
         }
@@ -68,8 +68,8 @@ public class Lexico {
      * Função responsável pela leitura inicial do arquivo.
      * @throws FileNotFoundException  - Caso o arquivo não seja encontrado
      */
-    public static void LeArquivo() throws FileNotFoundException{
-        arquivo = new RandomAccessFile("teste.txt", "r");
+    public static void LeArquivo(String nomeArquivo) throws FileNotFoundException{
+        arquivo = new RandomAccessFile(nomeArquivo, "r");
     }
     
     /**
