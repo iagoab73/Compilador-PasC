@@ -48,6 +48,11 @@ public class Sintatico {
      * Variável que guarda o estado atual do autômato.
      */
     static int estadoAtual;
+    
+    /**
+     * Variável que guarda uma versão da pilha que pode ser recuperada em caso de erro.
+     */
+    static Stack<Integer> pilhaBackup;
 
     /**
      * Método principal da classe Sintático, responsável por inicializar os itens acima e começar a análise.
@@ -185,6 +190,7 @@ public class Sintatico {
                 reduce();
             }   
         }
+        System.out.println("Finalizado! " + lexico.getContErro() + " erro(s) léxico(s) e " + contErro + " erro(s) sintático(s) encontrado(s)."); // Mostra a mensagem de fim e a quantidade de erros sintáticos encontrados.
     }
 
     /**
@@ -197,7 +203,6 @@ public class Sintatico {
         for(Path p : e.shifts){ // Passa por todos os caminhos do estado.
             if(p.entrada.equals(t.getTipo())){ // Verifica se a entrada de cada caminho é igual ao tipo do token.
                 if(t.getTipo().equals(Tipo.EOF)){ // Verifica se é o fim do arquivo.
-                    System.out.println("Finalizado! " + contErro + " erro(s) sintáticos encontrado(s)."); // Mostra a mensagem de fim e a quantidade de erros sintáticos encontrados.
                     fim = true; // Dá sinal para o fim da análise.
                     return;
                 }
@@ -211,17 +216,22 @@ public class Sintatico {
                 vazio = p; //Um shift com vazio só pode ser feito caso nenhum dos tipos verificados se encaixe com o tipo do token atual.
             }
         }
-        adicionaEsperados(e.shifts); // Nenhum tipo correspondeu ao tipo do token, portanto pode haver erro. Por isso começa a preencher a lista de esperados.
+        if(esperados.isEmpty()){ // Nenhum tipo correspondeu ao tipo do token, portanto pode haver erro. Fazemos aqui um backup da pilha. 
+            pilhaBackup = (Stack<Integer>) pilha.clone();
+        }
+        adicionaEsperados(e.shifts); // Começa a preencher a lista de esperados.
         if(vazio != null){ // Caso haja caminho com cadeia vazia.
             estadoAtual = vazio.saida; // Realiza os passos acima descritos, porém sem avançar o token.
             pilha.push(estadoAtual);
             System.out.println("\tSHIFT " + estadoAtual);
         }else{ // Se não for o caso, dá erro.
-            System.out.println("\nErro Sintático, " + t.getLexema() + " encontrado. Esperado(s): ");
-            for(Tipo tipo : esperados){ // Mostra os tipos esperados
+            pilha = (Stack<Integer>) pilhaBackup.clone(); // Ocorreu um erro e podem ter ocorrido movimentações entre os estado que prejudicariam o funcionamento seguinte do analisador. Por isso recuperamos o estado da pilha antes dessas movimentações.
+            estadoAtual = pilha.peek(); // O estado atual é o topo da pilha.
+            System.out.println("\nErro Sintático, '" + t.getLexema() + "' encontrado. Esperado(s): ");
+            for(Tipo tipo : esperados){ // Mostra os tipos esperados.
                 System.out.println("- " + tipo);
             }
-            contErro++;
+            contErro++; // Aumenta a contagem de erros.
             if(contErro > 4){ // Caso a contagem de erros sintáticos for superior à 4.
                 System.out.println("Compilação abortada. 5 erros sintáticos encontrados."); // Mostra a mensagem e termina compilação.
                 fim = true; // Dá sinal para o fim da análise.

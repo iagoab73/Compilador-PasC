@@ -29,6 +29,10 @@ public class Lexico {
      * Variável do arquivo que contém o programa a ser reconhecido pelo lexer.
      */
     public static RandomAccessFile arquivo;
+    /**
+     * Contador de erros léxicos.
+     */
+    public static int contErro = 0; 
     
     
     /**
@@ -40,6 +44,10 @@ public class Lexico {
         }catch(IOException e){
             System.out.println("\nErro no arquivo!");
         }
+    }
+    
+    public int getContErro(){
+        return contErro;
     }
     
     /**
@@ -154,6 +162,7 @@ public class Lexico {
                         return new Token(Tipo.EOF, "EOF", linha, coluna);
                     }else{
                         System.out.println("\nErro Léxico na linha " + linha + " e coluna " + coluna + ". '" + c_atual + "' não pode ser reconhecido.");
+                        contErro++;
                     }
                     break;
                 case 8:
@@ -180,13 +189,16 @@ public class Lexico {
                         return new Token(Tipo.OP_NE, "!=", linha, coluna);
                     }else if(c_atual == '\n'){
                         System.out.println("\nErro Léxico na linha " + linha + " e coluna " + coluna + ". '=' esperado.");
+                        contErro++;
                         linha++;
                         coluna = 0;
                     }else if(c_atual_cod == -1){
                         System.out.println("\nErro Léxico na linha " + linha + " e coluna " + coluna + ". Fim do arquivo alcançado terminar token '!='.");
+                        contErro++;
                         return new Token(Tipo.EOF, "EOF", linha, coluna);
                     }else{
                         System.out.println("\nErro Léxico na linha " + linha + " e coluna " + coluna + ". '=' esperado.");
+                        contErro++;
                     }
                     break;
                 case 18:
@@ -210,9 +222,11 @@ public class Lexico {
                 case 23:
                     if(c_atual_cod == -1){
                         System.out.println("\nErro Léxico na linha " + linha + " e coluna " + coluna + ". Fim do arquivo alcançado sem fechar aspas duplas.");
+                        contErro++;
                         return new Token(Tipo.EOF, "EOF", linha, coluna);
                     }else if(c_atual == '\n'){
                         System.out.println("\nErro Léxico na linha " + linha + " e coluna " + coluna + ". Quebra de linha sem fechar aspas duplas.");
+                        contErro++;
                         linha++;
                         coluna = 0;
                         estado = 39;
@@ -228,11 +242,13 @@ public class Lexico {
                         return new Token(Tipo.LIT, lexema.toString(), linha, coluna);
                     }else if(c_atual == '\n'){
                         System.out.println("\nErro Léxico na linha " + linha + " e coluna " + coluna + ". Quebra de linha sem fechar aspas duplas.");
+                        contErro++;
                         linha++;
                         coluna = 0;
                         estado = 39;
                     }else if(c_atual_cod == -1){
                         System.out.println("\nErro Léxico na linha " + linha + " e coluna " + coluna + ". Fim do arquivo alcançado sem fechar aspas duplas.");
+                        contErro++;
                         return new Token(Tipo.EOF, "EOF", linha, coluna);
                     }else if(c_atual != '\r'){
                         lexema.append(c_atual);
@@ -241,12 +257,14 @@ public class Lexico {
                 case 26:
                     if(c_atual_cod == -1){
                         System.out.println("\nErro Léxico na linha " + linha + " e coluna " + coluna + ". Fim do arquivo alcançado sem fechar aspas simples.");
+                        contErro++;
                         return new Token(Tipo.EOF, "EOF", linha, coluna);
                     }else if(c_atual == '\\'){
                         estado = 27;
                         lexema.append(c_atual);
                     }else if(c_atual == '\n'){
                         System.out.println("\nErro Léxico na linha " + linha + " e coluna " + coluna + ". Quebra de linha sem fechar aspas simples.");
+                        contErro++;
                     }else if(c_atual != '\r'){
                         estado = 28;
                         lexema.append(c_atual);
@@ -258,9 +276,11 @@ public class Lexico {
                         lexema.append(c_atual);
                     }else if(c_atual_cod == -1){
                         System.out.println("\nErro Léxico na linha " + linha + " e coluna " + coluna + ". Fim do arquivo alcançado sem fechar aspas simples.");
+                        contErro++;
                         return new Token(Tipo.EOF, "EOF", linha, coluna);
                     }else{
                         System.out.println("\nErro Léxico na linha " + linha + " e coluna " + coluna + ". Só pode haver um caracter entre aspas simples.");
+                        contErro++;
                     }
                     break;
                 case 28:
@@ -268,6 +288,7 @@ public class Lexico {
                         estado = 29;
                         if(lexema.toString().length() < 2){
                             System.out.println("\nErro Léxico na linha " + linha + " e coluna " + coluna + ". Caracter Vazio.");
+                            contErro++;
                             estado = 0;
                             lexema = new StringBuilder();
                         }else{
@@ -276,9 +297,11 @@ public class Lexico {
                         }
                     }else if(c_atual_cod == -1){
                         System.out.println("\nErro Léxico na linha " + linha + " e coluna " + coluna + ". Fim do arquivo alcançado sem fechar aspas simples.");
+                        contErro++;
                         return new Token(Tipo.EOF, "EOF", linha, coluna);
                     }else{
                         System.out.println("\nErro Léxico na linha " + linha + " e coluna " + coluna + ". Só pode haver um caracter entre aspas simples.");
+                        contErro++;
                     }
                     break;
                 case 30:
@@ -299,13 +322,16 @@ public class Lexico {
                         lexema.append(c_atual);
                     }else if(c_atual == '\n'){
                         System.out.println("\nErro Léxico na linha " + linha + " e coluna " + coluna + ". Dígito esperado.");
+                        contErro++;
                         linha++;
                         coluna = 0;
                     }else if(c_atual_cod == -1){
                         System.out.println("\nErro Léxico na linha " + linha + " e coluna " + coluna + ". Fim do arquivo alcançado sem completar número.");
+                        contErro++;
                         return new Token(Tipo.EOF, "EOF", linha, coluna);
                     }else{
                         System.out.println("\nErro Léxico na linha " + linha + " e coluna " + coluna + ". Dígito esperado.");
+                        contErro++;
                     }
                     break;
                 case 33:
@@ -346,6 +372,7 @@ public class Lexico {
                         coluna = 1;
                     }else if(c_atual_cod == -1){
                         System.out.println("\nErro Léxico na linha " + linha + " e coluna " + coluna + ". Fim do arquivo alcançado sem fechar aspas simples.");
+                        contErro++;
                         return new Token(Tipo.EOF, "EOF", linha, coluna);
                     }
                     break;
@@ -356,6 +383,7 @@ public class Lexico {
                         lexema = new StringBuilder();
                     }else if(c_atual_cod == -1){
                         System.out.println("\nErro Léxico na linha " + linha + " e coluna " + coluna + ". Fim do arquivo alcançado sem fechar o comentário.");
+                        contErro++;
                         return new Token(Tipo.EOF, "EOF", linha, coluna);
                     }else{
                         estado = 36;
@@ -374,6 +402,7 @@ public class Lexico {
                         }
                     }else if(c_atual_cod == -1){
                         System.out.println("\nErro Léxico na linha " + linha + " e coluna " + coluna + ". Fim do arquivo alcançado sem fechar aspas duplas.");
+                        contErro++;
                         return new Token(Tipo.EOF, "EOF", linha, coluna);
                     }
                     break;
