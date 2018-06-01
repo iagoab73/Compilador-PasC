@@ -85,6 +85,5 @@ public enum Tipo {
     R,
     A,
     M,
-    Q,
     CT;
 }
