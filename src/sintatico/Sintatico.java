@@ -197,8 +197,8 @@ public class Sintatico {
         for(Path p : e.shifts){ // Passa por todos os caminhos do estado.
             if(p.entrada.equals(t.getTipo())){ // Verifica se a entrada de cada caminho é igual ao tipo do token.
                 if(t.getTipo().equals(Tipo.EOF)){ // Verifica se é o fim do arquivo.
-                    System.out.println("FIM"); // Mostra a mensagem e retorna.
-                    fim = true;
+                    System.out.println("Finalizado! " + contErro + " erro(s) sintáticos encontrado(s)."); // Mostra a mensagem de fim e a quantidade de erros sintáticos encontrados.
+                    fim = true; // Dá sinal para o fim da análise.
                     return;
                 }
                 estadoAtual = p.saida; // Avança o estado atual para o destino do caminho.
@@ -223,7 +223,8 @@ public class Sintatico {
             }
             contErro++;
             if(contErro > 4){ // Caso a contagem de erros sintáticos for superior à 4.
-                System.out.println("Compilação abortada. Cinco erros sintáticos encontrados."); // Mostra a mensagem e termina compilação.
+                System.out.println("Compilação abortada. 5 erros sintáticos encontrados."); // Mostra a mensagem e termina compilação.
+                fim = true; // Dá sinal para o fim da análise.
                 return;
             }
             t = lexico.proximoToken(); // Para o modo pânico, mantemos o autômato no mesmo estado e avançamos o token de entrada.

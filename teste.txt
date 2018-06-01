@@ -6,7 +6,7 @@ num resultado;
 char texto;
 
 {
-   write "Digite seu peso:";
+   wrie "Digite seu peso:";
    read peso;
    write "Digite sua altura:";
    read altura;
