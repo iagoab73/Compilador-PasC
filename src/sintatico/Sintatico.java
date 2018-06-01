@@ -30,6 +30,10 @@ public class Sintatico {
      */
     static List<Tipo> esperados;
     /**
+     * Estrutura que guarda os exemplos dos tokens esperados que serão mostrados em caso de erro;
+     */
+    static HashMap<Tipo, String> exemploEsperados;
+    /**
      * Contador de erros sintáticos.
      */
     static int contErro = 0;
@@ -59,8 +63,30 @@ public class Sintatico {
      * @param args the command line arguments
      */
     public static void main(String[] args) {
-        // Estados é inicializado e os estados do autômato são inseridos. Na classe Estado e Path é possível ver o que cada um dos parâmetros significa.
-        estados = new HashMap<>();
+        insereEstados(); // Cria a estrutura de estados.
+        
+        // Analisador léxico é inicializado, juntamente com a pilha e a lista de tokens esperados.
+        lexico = new Lexico();
+        pilha = new Stack<>();
+        esperados = new ArrayList<>();
+        
+        insereExemplosEsperados(); // Cria a estrutura de exemplos dos tokens esperados.
+        
+        
+        // O primeiro token é recebido, enviado após a análise do analisador léxico.
+        t = lexico.proximoToken();
+        // Variável que guarda o estado atual do autômato, começa com o valor 1 (Estado Inicial).
+        estadoAtual = 1;
+        // Insere o estado atual na pilha.
+        pilha.push(estadoAtual);
+        // Inicia as verificações no estado inicial, enviando tanto o estado quanto o token atual.
+        iniciaEstado();
+    }
+    /**
+     * Método responsável por inserir os estados do autômato na estrutura estados.
+     */
+    public static void insereEstados(){
+        estados = new HashMap<>();// Estados é inicializado e os estados do autômato são inseridos. Na classe Estado e Path é possível ver o que cada um dos parâmetros significa.
         estados.put(1, new Estado(Tipo.P, 1, new Path[]{new Path(Tipo.KW_PROGRAM, 2)}, new Path[]{}));
         estados.put(2, new Estado(Tipo.P, 2, new Path[]{new Path(Tipo.ID, 3)}, new Path[]{}));
         estados.put(3, new Estado(Tipo.P, 3, new Path[]{new Path(Tipo.VAZIO, 7), new Path(Tipo.KW_NUM, 9), new Path(Tipo.KW_CHAR, 10)}, new Path[]{new Path(Tipo.B, 4), new Path(Tipo.DL, 5), new Path(Tipo.D, 6), new Path(Tipo.TY, 8)}));
@@ -161,21 +187,48 @@ public class Sintatico {
         estados.put(102, new Estado(Tipo.IS_, 102, 1));
         estados.put(103, new Estado(Tipo.IS_, 103, new Path[]{new Path(Tipo.VAZIO, 17), new Path(Tipo.ID, 24), new Path(Tipo.KW_IF, 25), new Path(Tipo.KW_READ, 27), new Path(Tipo.KW_WRITE, 28), new Path(Tipo.KW_WHILE, 29)}, new Path[]{new Path(Tipo.SL, 104), new Path(Tipo.S, 16), new Path(Tipo.AS, 18), new Path(Tipo.IS, 19), new Path(Tipo.WHS, 20), new Path(Tipo.RS, 21), new Path(Tipo.WRS, 22), new Path(Tipo.SP, 26)}));
         estados.put(104, new Estado(Tipo.IS_, 104, new Path[]{new Path(Tipo.SMB_CBC, 105)}, new Path[]{}));
-        estados.put(105, new Estado(Tipo.IS_, 105, 4));        
+        estados.put(105, new Estado(Tipo.IS_, 105, 4));    
+    }
+    
+    /**
+     * Método responsável por inserir os exemplos de token esperados na estrutura exemploEsperados.
+     */
+    public static void insereExemplosEsperados(){
+        exemploEsperados = new HashMap<>();
+        exemploEsperados.put(Tipo.KW_PROGRAM, "'program'");
+        exemploEsperados.put(Tipo.KW_IF, "'if'");
+        exemploEsperados.put(Tipo.KW_ELSE, "'else'");
+        exemploEsperados.put(Tipo.KW_WHILE, "'while'");
+        exemploEsperados.put(Tipo.KW_WRITE, "'write'");
+        exemploEsperados.put(Tipo.KW_READ, "'read'");
+        exemploEsperados.put(Tipo.KW_NUM, "'num'");
+        exemploEsperados.put(Tipo.KW_CHAR, "'char'");
+        exemploEsperados.put(Tipo.KW_NOT, "'not'");
+        exemploEsperados.put(Tipo.KW_OR, "'or'");
+        exemploEsperados.put(Tipo.KW_AND, "'and");
+        exemploEsperados.put(Tipo.SMB_SEM, "';'");
+        exemploEsperados.put(Tipo.SMB_COM, "','");
+        exemploEsperados.put(Tipo.SMB_CPA, "')'");
+        exemploEsperados.put(Tipo.SMB_OPA, "'('");
+        exemploEsperados.put(Tipo.SMB_CBC, "'}'");
+        exemploEsperados.put(Tipo.SMB_OBC, "'{'");
+        exemploEsperados.put(Tipo.OP_MUL, "'*'");
+        exemploEsperados.put(Tipo.OP_DIV, "'/'");
+        exemploEsperados.put(Tipo.OP_LT, "'<'");
+        exemploEsperados.put(Tipo.OP_LE, "'<='");
+        exemploEsperados.put(Tipo.OP_AD, "'+'");
+        exemploEsperados.put(Tipo.OP_MIN, "'-'");
+        exemploEsperados.put(Tipo.OP_GT, "'>'");
+        exemploEsperados.put(Tipo.OP_GE, "'>='");
+        exemploEsperados.put(Tipo.OP_NE, "'!='");
+        exemploEsperados.put(Tipo.OP_ASS, "'='");
+        exemploEsperados.put(Tipo.OP_EQ, "'=='");
+        exemploEsperados.put(Tipo.ID, "Identificador");
+        exemploEsperados.put(Tipo.LIT, "Literal");
+        exemploEsperados.put(Tipo.CON_CHAR, "Constante de Caractér");
+        exemploEsperados.put(Tipo.CON_NUM, "Constante Numérica");
+        exemploEsperados.put(Tipo.EOF, "Fim de Arquivo");
         
-        // Analisador léxico é inicializado, juntamente com a pilha e a lista de tokens esperados.
-        lexico = new Lexico();
-        pilha = new Stack<>();
-        esperados = new ArrayList<>();
-        
-        // O primeiro token é recebido, enviado após a análise do analisador léxico.
-        t = lexico.proximoToken();
-        // Variável que guarda o estado atual do autômato, começa com o valor 1 (Estado Inicial).
-        estadoAtual = 1;
-        // Insere o estado atual na pilha.
-        pilha.push(estadoAtual);
-        // Inicia as verificações no estado inicial, enviando tanto o estado quanto o token atual.
-        iniciaEstado();
     }
     
     /**
@@ -227,9 +280,9 @@ public class Sintatico {
         }else{ // Se não for o caso, dá erro.
             pilha = (Stack<Integer>) pilhaBackup.clone(); // Ocorreu um erro e podem ter ocorrido movimentações entre os estado que prejudicariam o funcionamento seguinte do analisador. Por isso recuperamos o estado da pilha antes dessas movimentações.
             estadoAtual = pilha.peek(); // O estado atual é o topo da pilha.
-            System.out.println("\nErro Sintático, '" + t.getLexema() + "' encontrado. Esperado(s): ");
+            System.out.println("\nErro Sintático na linha " + t.getLinha() + " e coluna " + t.getColuna() + ". '" + t.getLexema() + "' encontrado. Esperado(s): ");
             for(Tipo tipo : esperados){ // Mostra os tipos esperados.
-                System.out.println("- " + tipo);
+                System.out.println("- " + exemploEsperados.get(tipo));
             }
             contErro++; // Aumenta a contagem de erros.
             if(contErro > 4){ // Caso a contagem de erros sintáticos for superior à 4.
