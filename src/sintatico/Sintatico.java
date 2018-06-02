@@ -41,22 +41,18 @@ public class Sintatico {
      * Contador de erros sintáticos.
      */
     static int contErro = 0;
-    
     /**
      * Indicador do fim do arquivo.
      */
     static boolean fim = false;
-    
     /**
      * Variável que guarda o token atual.
      */
     static Token t;
-    
-    /**
+       /**
      * Variável que guarda o estado atual do autômato.
      */
     static int estadoAtual;
-    
     /**
      * Variável que guarda uma versão da pilha que pode ser recuperada em caso de erro.
      */
@@ -245,7 +241,8 @@ public class Sintatico {
 
     /**
      * Método responsável pela operação SHIFT - Compara o token atual com os tipos de token aceitos pelo estado atual, avançando caso sejam compatíveis -
-     * Caso a cadeia vazia seja um dos tipos aceitos pelo estado e nenhum outro tipo do estado seja igual ao token atual, é feito um shift sem avançar o token atual.
+     * Caso a cadeia vazia seja um dos tipos aceitos pelo estado e nenhum outro tipo do estado seja igual ao token atual, é feito um shift sem avançar o token atual -
+     * Aqui é feita a implementação do modo pânico, onde identificamos o erro sintático, mostramos os tokens esperados e prosseguimos a análise enquanto a quantidade de erros é inferior a 5.
      */
     public static void shift() {
         Estado e = estados.get(estadoAtual); // Pega o estado atual da lista de estados.
