@@ -58,7 +58,7 @@ public class Lexico {
     public Token proximoToken(){
         try{
             Token t = ProximoToken();
-            System.out.println("\nNovo Token: < " + t.getTipo() + " , '" + t.getLexema() + "' > Linha: " + t.getLinha() + " , Coluna: " + t.getColuna());
+            System.out.println(t.toString());
             return t;
         }catch(IOException e){
             System.out.println("\nErro no arquivo!");

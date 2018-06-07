@@ -18,37 +18,37 @@ public class TabelaSimbolos {
     public TabelaSimbolos() {
         this.tabela_simbolos = new HashMap<>();
         
-        Token tok = new Token(Tipo.KW_PROGRAM, "program", 0, 0);
+        Token tok = new Token(Tipo.KW_PROGRAM, "program", 0, 0, true);
         this.tabela_simbolos.put(tok.getLexema(), tok);
         
-        tok = new Token(Tipo.KW_IF, "if", 0, 0);
+        tok = new Token(Tipo.KW_IF, "if", 0, 0, true);
         this.tabela_simbolos.put(tok.getLexema(), tok);
         
-        tok = new Token(Tipo.KW_ELSE, "else", 0, 0);
+        tok = new Token(Tipo.KW_ELSE, "else", 0, 0, true);
         this.tabela_simbolos.put(tok.getLexema(), tok);
         
-        tok = new Token(Tipo.KW_WHILE, "while", 0, 0);
+        tok = new Token(Tipo.KW_WHILE, "while", 0, 0, true);
         this.tabela_simbolos.put(tok.getLexema(), tok);
         
-        tok = new Token(Tipo.KW_WRITE, "write", 0, 0);
+        tok = new Token(Tipo.KW_WRITE, "write", 0, 0, true);
         this.tabela_simbolos.put(tok.getLexema(), tok);
         
-        tok = new Token(Tipo.KW_READ, "read", 0, 0);
+        tok = new Token(Tipo.KW_READ, "read", 0, 0, true);
         this.tabela_simbolos.put(tok.getLexema(), tok);
         
-        tok = new Token(Tipo.KW_NUM, "num", 0, 0);
+        tok = new Token(Tipo.KW_NUM, "num", 0, 0, true);
         this.tabela_simbolos.put(tok.getLexema(), tok);
         
-        tok = new Token(Tipo.KW_CHAR, "char", 0, 0);
+        tok = new Token(Tipo.KW_CHAR, "char", 0, 0, true);
         this.tabela_simbolos.put(tok.getLexema(), tok);
         
-        tok = new Token(Tipo.KW_NOT, "not", 0, 0);
+        tok = new Token(Tipo.KW_NOT, "not", 0, 0, true);
         this.tabela_simbolos.put(tok.getLexema(), tok);
         
-        tok = new Token(Tipo.KW_OR, "or", 0, 0);
+        tok = new Token(Tipo.KW_OR, "or", 0, 0, true);
         this.tabela_simbolos.put(tok.getLexema(), tok);
         
-        tok = new Token(Tipo.KW_AND, "and", 0, 0);
+        tok = new Token(Tipo.KW_AND, "and", 0, 0, true);
         this.tabela_simbolos.put(tok.getLexema(), tok);
     }
     
@@ -78,7 +78,7 @@ public class TabelaSimbolos {
             t.setColuna(coluna);
             return this.tabela_simbolos.get(lexema);
         }else{
-            Token tok = new Token(Tipo.ID, lexema, linha, coluna);
+            Token tok = new Token(Tipo.ID, lexema, linha, coluna, true);
             this.tabela_simbolos.put(lexema, tok);
             return tok;
         }

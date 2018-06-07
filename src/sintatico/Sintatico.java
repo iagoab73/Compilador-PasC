@@ -57,6 +57,8 @@ public class Sintatico {
      * Variável que guarda uma versão da pilha que pode ser recuperada em caso de erro.
      */
     static Stack<Integer> pilhaBackup;
+    
+    static List<Token> listaTokens;
 
     /**
      * Método principal da classe Sintático, responsável por inicializar os itens acima e começar a análise.
@@ -69,7 +71,9 @@ public class Sintatico {
         pilha = new Stack<>();
         esperados = new ArrayList<>();
         insereExemplosEsperados(); // Cria a estrutura de exemplos dos tokens esperados.
+        listaTokens = new ArrayList<>();
         t = lexico.proximoToken();// O primeiro token é recebido, enviado após a análise do analisador léxico.
+        listaTokens.add(t);
         estadoAtual = 1; // Variável que guarda o estado atual do autômato, começa com o valor 1 (Estado Inicial).
         pilha.push(estadoAtual); // Insere o estado atual na pilha.
         iniciaEstado();// Inicia as verificações no estado inicial.
@@ -236,6 +240,8 @@ public class Sintatico {
                 reduce();
             }   
         }
+        Tela tela = new Tela(listaTokens);
+        tela.setVisible(true);
         System.out.println("Finalizado! " + lexico.getContErro() + " erro(s) léxico(s) e " + contErro + " erro(s) sintático(s) encontrado(s)."); // Mostra a mensagem de fim e a quantidade de erros sintáticos encontrados.
     }
 
@@ -255,9 +261,11 @@ public class Sintatico {
                 }
                 estadoAtual = p.saida; // Avança o estado atual para o destino do caminho.
                 pilha.push(estadoAtual); // Insere o novo estado na pilha.
+                t.setOperacao("\tSHIFT " + estadoAtual);
                 System.out.println("\tSHIFT " + estadoAtual); // Mensagem de confirmação do SHIFT.
                 esperados.clear(); // Limpa a lista de esperados, já que não ocorreu erro com o Token.
                 t = lexico.proximoToken(); // Recebe o próximo token do Léxico.
+                listaTokens.add(t);
                 return;
             }else if(p.entrada.equals(Tipo.VAZIO)){ // Caso haja um caminho em cadeia vazia, apenas o salva na variável vazio. 
                 vazio = p; //Um shift com vazio só pode ser feito caso nenhum dos tipos verificados se encaixe com o tipo do token atual.
@@ -270,6 +278,7 @@ public class Sintatico {
         if(vazio != null){ // Caso haja caminho com cadeia vazia.
             estadoAtual = vazio.saida; // Realiza os passos acima descritos, porém sem avançar o token.
             pilha.push(estadoAtual);
+            t.setOperacao("\tSHIFT " + estadoAtual);
             System.out.println("\tSHIFT " + estadoAtual);
         }else{ // Se não for o caso, dá erro.
             pilha = (Stack<Integer>) pilhaBackup.clone(); // Ocorreu um erro e podem ter ocorrido movimentações entre os estados que prejudicariam o funcionamento seguinte do analisador. Por isso recuperamos o estado da pilha antes dessas movimentações.
@@ -285,6 +294,7 @@ public class Sintatico {
                 return;
             }
             t = lexico.proximoToken(); // Para o modo pânico, mantemos o autômato no mesmo estado e avançamos o token de entrada.
+            listaTokens.add(t);
         }
     }
     
@@ -296,6 +306,7 @@ public class Sintatico {
         for(int i = 0; i < e.qntTokens; i++){ // Desempilha os estados com base na quantidade de tokens do estado.
             pilha.pop();
         }
+        t.setOperacao("\tREDUCE " + estadoAtual);
         System.out.println("\tREDUCE " + pilha.peek()); // Mensagem de confirmação do REDUCE.
         goTo(e.naoTerminal); // Chama o método do GOTO, mandando como parâmetro o não terminal deste estado.
     }
@@ -310,6 +321,7 @@ public class Sintatico {
             if(p.entrada.equals(naoTerminal)){ // Verifica se a entrada equivale ao não terminal enviado.
                 estadoAtual = p.saida; // Avança o estado com base no destino do caminho.
                 pilha.push(estadoAtual); // Empilha o próximo estado.
+                t.setOperacao("\tGOTO " + estadoAtual);
                 System.out.println("\tGOTO " + estadoAtual); // Mensagem de confirmação do GOTO.
                 return;
             }
