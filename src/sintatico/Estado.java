@@ -28,6 +28,10 @@ public class Estado {
      */
     public int qntTokens;
     
+    public int localL;
+    
+    public int localA;
+    
     /**
      * Construtor para estados de SHIFT - Aqui, a quantidade de tokens é iniciada como -1, uma forma de indicar que este estado é um estado de SHIFT.
      * @param naoTerminal Não é necessário neste caso, mas ainda sim é assimilado ao estado.
@@ -50,6 +54,26 @@ public class Estado {
      * @param qntTokens Neste caso a quantidade de tokens é enviada como parâmetro, afim de mostrar quantos itens da pilha serão desempilhados com o REDUCE deste estado.
      */
     public Estado(Tipo naoTerminal, int id, int qntTokens) {
+        this.naoTerminal = naoTerminal;
+        this.id = id;
+        this.qntTokens = qntTokens;
+        this.shifts = new Path[]{};
+        this.gotos = new Path[]{};
+    }
+    
+    public Estado(int localL, int localA, Tipo naoTerminal, int id, Path[] shifts, Path[] gotos) {
+        this.localL = localL;
+        this.localA = localA;
+        this.naoTerminal = naoTerminal;
+        this.id = id;
+        this.shifts = shifts;
+        this.gotos = gotos;
+        this.qntTokens = -1;
+    }
+    
+    public Estado(int localL, int localA, Tipo naoTerminal, int id, int qntTokens) {
+        this.localL = localL;
+        this.localA = localA;
         this.naoTerminal = naoTerminal;
         this.id = id;
         this.qntTokens = qntTokens;

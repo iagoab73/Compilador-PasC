@@ -1,7 +1,7 @@
 program IMC
 
 num altura;
-num peso;
+num peso,
 num resultado;
 char texto;
 

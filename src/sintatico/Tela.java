@@ -5,6 +5,7 @@
  */
 package sintatico;
 
+import java.util.HashMap;
 import java.util.List;
 import javax.swing.DefaultListModel;
 import lexico.Token;
@@ -15,20 +16,31 @@ import lexico.Token;
  */
 public class Tela extends javax.swing.JFrame {
     
-    public List<Token> listT;
+    public List<ItemTela> listT;
+    
+    public HashMap<Integer, Estado> estados;
 
     /**
      * Creates new form Tela
      * @param listT
+     * @param estados
      */
-    public Tela(List<Token> listT) {
-        this.listT = listT;
+    public Tela(List<ItemTela> listT, HashMap<Integer, Estado> estados, String log) {
         initComponents();
+        this.log.setEditable(false);
+        this.log.setText(log);
+        this.listT = listT;
+        this.estados = estados;
+        this.mudaAfd(estados.get(1));
         DefaultListModel dim = new DefaultListModel();
-        for(Token i : listT){
-            dim.addElement(i.toString());
+        for(ItemTela i : listT){
+            dim.addElement(i.getT());
         }
-        this.listaTokens.setModel(dim);
+        this.listaItems.setModel(dim);
+    }
+    
+    public void mudaAfd(Estado e){
+        afd.setLocation(-(e.localL) + 215, -(e.localA) + 265);
     }
     
     /**
@@ -40,60 +52,89 @@ public class Tela extends javax.swing.JFrame {
     // <editor-fold defaultstate="collapsed" desc="Generated Code">//GEN-BEGIN:initComponents
     private void initComponents() {
 
-        afd = new javax.swing.JLabel();
         jScrollPane1 = new javax.swing.JScrollPane();
-        listaTokens = new javax.swing.JList<>();
+        listaItems = new javax.swing.JList<>();
         jScrollPane2 = new javax.swing.JScrollPane();
         listaOps = new javax.swing.JList<>();
+        jScrollPane3 = new javax.swing.JScrollPane();
+        log = new javax.swing.JTextArea();
+        fundo = new javax.swing.JLabel();
+        afd = new javax.swing.JLabel();
 
-        setLayout(new org.netbeans.lib.awtextra.AbsoluteLayout());
+        setDefaultCloseOperation(javax.swing.WindowConstants.EXIT_ON_CLOSE);
+        setMaximumSize(new java.awt.Dimension(1080, 800));
+        setMinimumSize(new java.awt.Dimension(1080, 800));
+        setPreferredSize(new java.awt.Dimension(1080, 800));
+        setResizable(false);
+        getContentPane().setLayout(new org.netbeans.lib.awtextra.AbsoluteLayout());
 
-        afd.setBackground(new java.awt.Color(80, 63, 47));
-        afd.setIcon(new javax.swing.ImageIcon(getClass().getResource("/sintatico/AfdBottomUp.jpg"))); // NOI18N
-        afd.setVerticalAlignment(javax.swing.SwingConstants.TOP);
-        afd.setMaximumSize(new java.awt.Dimension(200, 150));
-        afd.setPreferredSize(new java.awt.Dimension(200, 150));
-        add(afd, new org.netbeans.lib.awtextra.AbsoluteConstraints(10, 10, 270, 290));
-
-        listaTokens.setModel(new javax.swing.AbstractListModel<String>() {
-            String[] strings = { "Item 1", "Item 2", "Item 3", "Item 4", "Item 5" };
-            public int getSize() { return strings.length; }
-            public String getElementAt(int i) { return strings[i]; }
-        });
-        listaTokens.addMouseListener(new java.awt.event.MouseAdapter() {
-            public void mouseClicked(java.awt.event.MouseEvent evt) {
-                listaTokensMouseClicked(evt);
+        listaItems.setSelectionMode(javax.swing.ListSelectionModel.SINGLE_SELECTION);
+        listaItems.addMouseListener(new java.awt.event.MouseAdapter() {
+            public void mousePressed(java.awt.event.MouseEvent evt) {
+                listaItemsMousePressed(evt);
             }
         });
-        jScrollPane1.setViewportView(listaTokens);
+        jScrollPane1.setViewportView(listaItems);
 
-        add(jScrollPane1, new org.netbeans.lib.awtextra.AbsoluteConstraints(300, 10, 370, 290));
+        getContentPane().add(jScrollPane1, new org.netbeans.lib.awtextra.AbsoluteConstraints(430, 20, 520, 180));
 
-        listaOps.setModel(new javax.swing.AbstractListModel<String>() {
-            String[] strings = { "Item 1", "Item 2", "Item 3", "Item 4", "Item 5" };
-            public int getSize() { return strings.length; }
-            public String getElementAt(int i) { return strings[i]; }
+        listaOps.addMouseListener(new java.awt.event.MouseAdapter() {
+            public void mousePressed(java.awt.event.MouseEvent evt) {
+                listaOpsMousePressed(evt);
+            }
         });
         jScrollPane2.setViewportView(listaOps);
 
-        add(jScrollPane2, new org.netbeans.lib.awtextra.AbsoluteConstraints(680, 10, 90, 290));
+        getContentPane().add(jScrollPane2, new org.netbeans.lib.awtextra.AbsoluteConstraints(960, 20, 100, 180));
+
+        log.setColumns(20);
+        log.setRows(5);
+        jScrollPane3.setViewportView(log);
+
+        getContentPane().add(jScrollPane3, new org.netbeans.lib.awtextra.AbsoluteConstraints(430, 210, 630, 180));
+
+        fundo.setIcon(new javax.swing.ImageIcon(getClass().getResource("/sintatico/Fundo.png"))); // NOI18N
+        fundo.setMaximumSize(new java.awt.Dimension(1080, 800));
+        fundo.setMinimumSize(new java.awt.Dimension(1080, 800));
+        fundo.setPreferredSize(new java.awt.Dimension(1080, 800));
+        getContentPane().add(fundo, new org.netbeans.lib.awtextra.AbsoluteConstraints(0, 0, 1080, 800));
+
+        afd.setBackground(new java.awt.Color(80, 63, 47));
+        afd.setHorizontalAlignment(javax.swing.SwingConstants.LEFT);
+        afd.setIcon(new javax.swing.ImageIcon(getClass().getResource("/sintatico/AfdBottomUp.png"))); // NOI18N
+        afd.setToolTipText("");
+        afd.setVerticalAlignment(javax.swing.SwingConstants.TOP);
+        afd.setMaximumSize(new java.awt.Dimension(4491, 2555));
+        afd.setName(""); // NOI18N
+        afd.setPreferredSize(new java.awt.Dimension(4491, 2555));
+        getContentPane().add(afd, new org.netbeans.lib.awtextra.AbsoluteConstraints(110, 234, 4491, 2555));
     }// </editor-fold>//GEN-END:initComponents
 
-    private void listaTokensMouseClicked(java.awt.event.MouseEvent evt) {//GEN-FIRST:event_listaTokensMouseClicked
-        Token esse = this.listT.get(listaTokens.getAnchorSelectionIndex());
+    private void listaItemsMousePressed(java.awt.event.MouseEvent evt) {//GEN-FIRST:event_listaItemsMousePressed
         DefaultListModel dim = new DefaultListModel();
-        for(String s : esse.getOperacoes()){
-            dim.addElement(s);
+        ItemTela esse = this.listT.get(listaItems.getAnchorSelectionIndex());
+        for(Operacao c : esse.getOps()){
+            dim.addElement(c.getNome() + " " + c.getEstado());
         }
+        
         this.listaOps.setModel(dim);
-    }//GEN-LAST:event_listaTokensMouseClicked
+    }//GEN-LAST:event_listaItemsMousePressed
+
+    private void listaOpsMousePressed(java.awt.event.MouseEvent evt) {//GEN-FIRST:event_listaOpsMousePressed
+        Operacao esse = this.listT.get(listaItems.getAnchorSelectionIndex()).getOps().get(listaOps.getAnchorSelectionIndex());
+        Estado e = estados.get(esse.getEstado());
+        this.mudaAfd(e);
+    }//GEN-LAST:event_listaOpsMousePressed
 
 
     // Variables declaration - do not modify//GEN-BEGIN:variables
     private javax.swing.JLabel afd;
+    private javax.swing.JLabel fundo;
     private javax.swing.JScrollPane jScrollPane1;
     private javax.swing.JScrollPane jScrollPane2;
+    private javax.swing.JScrollPane jScrollPane3;
+    private javax.swing.JList<String> listaItems;
     private javax.swing.JList<String> listaOps;
-    private javax.swing.JList<String> listaTokens;
+    private javax.swing.JTextArea log;
     // End of variables declaration//GEN-END:variables
 }

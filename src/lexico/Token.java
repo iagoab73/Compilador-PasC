@@ -28,11 +28,6 @@ public class Token {
      */
     private final Tipo tipo;
     
-    private ArrayList<String> operacoes;
-    
-    private boolean ts;
-
-    
     /**
      * Método construtor da classe Token, recebendo todos os atributos necessários.
      * @param tipo Tipo do token.
@@ -45,17 +40,6 @@ public class Token {
         this.linha = linha;
         this.coluna = coluna;
         this.tipo = tipo;
-        this.operacoes = new ArrayList<>();
-        this.ts = false;
-    }
-    
-    public Token(Tipo tipo, String lexema, int linha, int coluna, boolean ts) {
-        this.lexema = lexema;
-        this.linha = linha;
-        this.coluna = coluna;
-        this.tipo = tipo;
-        this.operacoes = new ArrayList<>();
-        this.ts = ts;
     }
 
     /**
@@ -106,17 +90,6 @@ public class Token {
      */
     public void setLinha(int linha) {
         this.linha = linha;
-    }
-
-    public ArrayList<String> getOperacoes() {
-        return operacoes;
-    }
-
-    public void setOperacao(String op) {
-        if(this.operacoes.isEmpty() || !this.ts){
-            
-        }
-        
     }
     
     @Override
