@@ -58,6 +58,7 @@ public class Tela extends javax.swing.JFrame {
         listaOps = new javax.swing.JList<>();
         jScrollPane3 = new javax.swing.JScrollPane();
         log = new javax.swing.JTextArea();
+        tituloAfd = new javax.swing.JLabel();
         fundo = new javax.swing.JLabel();
         afd = new javax.swing.JLabel();
 
@@ -92,6 +93,11 @@ public class Tela extends javax.swing.JFrame {
         jScrollPane3.setViewportView(log);
 
         getContentPane().add(jScrollPane3, new org.netbeans.lib.awtextra.AbsoluteConstraints(430, 210, 630, 180));
+
+        tituloAfd.setFont(new java.awt.Font("Tahoma", 1, 14)); // NOI18N
+        tituloAfd.setForeground(new java.awt.Color(255, 0, 0));
+        tituloAfd.setText("Estado do Autômato alcançado pela operação selecionada");
+        getContentPane().add(tituloAfd, new org.netbeans.lib.awtextra.AbsoluteConstraints(10, 10, 410, 20));
 
         fundo.setIcon(new javax.swing.ImageIcon(getClass().getResource("/sintatico/Fundo.png"))); // NOI18N
         fundo.setMaximumSize(new java.awt.Dimension(1080, 800));
@@ -136,5 +142,6 @@ public class Tela extends javax.swing.JFrame {
     private javax.swing.JList<String> listaItems;
     private javax.swing.JList<String> listaOps;
     private javax.swing.JTextArea log;
+    private javax.swing.JLabel tituloAfd;
     // End of variables declaration//GEN-END:variables
 }

@@ -6,12 +6,15 @@ num resultado;
 char texto;
 
 {
+	if(a){
+	}else{
+	}
    write "Digite seu peso:";
    read peso;
-   write "Digite sua altura:";
+   write "Digite sua altura:"
    read altura;
 
-   resultado = peso / (altura * altura);
+   resultado = peso / (altura altura);
 
    write "Seu IMC é:";
    write resultado;

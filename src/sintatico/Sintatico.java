@@ -247,8 +247,8 @@ public class Sintatico {
                 reduce();
             }   
         }
-        adicionaNoLog("Finalizado! " + lexico.getContErro() + " erro(s) léxico(s) e " + contErro + " erro(s) sintático(s) encontrado(s).");
-        System.out.println("Finalizado! " + lexico.getContErro() + " erro(s) léxico(s) e " + contErro + " erro(s) sintático(s) encontrado(s)."); // Mostra a mensagem de fim e a quantidade de erros sintáticos encontrados.
+        adicionaNoLog("\nFinalizado! " + lexico.getContErro() + " erro(s) léxico(s) e " + contErro + " erro(s) sintático(s) encontrado(s).");
+        System.out.println("\nFinalizado! " + lexico.getContErro() + " erro(s) léxico(s) e " + contErro + " erro(s) sintático(s) encontrado(s)."); // Mostra a mensagem de fim e a quantidade de erros sintáticos encontrados.
         Tela tela = new Tela(listaItens, estados, log);
         tela.setVisible(true);
     }
@@ -301,8 +301,8 @@ public class Sintatico {
             }
             contErro++; // Aumenta a contagem de erros.
             if(contErro > 4){ // Caso a contagem de erros sintáticos for superior à 4.
-                adicionaNoLog("Compilação abortada. 5 erros sintáticos encontrados.");
-                System.out.println("Compilação abortada. 5 erros sintáticos encontrados."); // Mostra a mensagem e termina compilação.
+                adicionaNoLog("\nCompilação abortada. 5 erros sintáticos encontrados.");
+                System.out.println("\nCompilação abortada. 5 erros sintáticos encontrados."); // Mostra a mensagem e termina compilação.
                 fim = true; // Dá sinal para o fim da análise.
                 return;
             }
